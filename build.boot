@@ -21,7 +21,7 @@
  '[pandeiro.boot-http :refer [serve]])
 
 (try
- (require 'example.my-app)
+ (require 'jutsu.core)
  (catch Exception e (.getMessage e)))
 
 (deftask night 
@@ -38,4 +38,4 @@
    (watch)
    (cljs :source-map true)
    (reload)
-   (repl :init-ns 'example.my-app)))
+   (repl :init-ns 'jutsu.core)))
