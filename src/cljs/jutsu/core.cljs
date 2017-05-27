@@ -20,9 +20,12 @@
 
 (defn draw-plot!
   [data layout]
-  (append-to-body! (html [(keyword (str "div#graph-container-" @graph-count))]))
+  (append-to-body! (html [:div.container
+                          [:style (str ".container {text-align: left;}")]
+                          [:h1 (str "graph " @graph-count)]
+                          [(keyword (str "div#inner-graph-container-" @graph-count))]]))
   (js/Plotly.newPlot
-    (str "graph-container-" @graph-count)
+    (str "inner-graph-container-" @graph-count)
     (clj->js data)
     (clj->js layout))
   (swap! graph-count inc))
@@ -72,9 +75,9 @@
     (when (= :graph/graph (first ?data))
       (draw-plot! 
         (:data (second ?data))
-        (:layout (second ?data)))
+        (:layout (second ?data)))))
         
-      ))    
+          
   (defmethod event-msg-handler :chsk/handshake
     [{:as ev-msg :keys [?data]}]
     (let [[?uid ?csrf-token ?handshake-data] ?data]

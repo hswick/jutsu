@@ -10,7 +10,8 @@
      [taoensso.sente     :as sente]
      [org.httpkit.server :as http-kit]
      [taoensso.sente.server-adapters.http-kit :refer (sente-web-server-adapter)]
-     [taoensso.sente.packers.transit :as sente-transit]))
+     [taoensso.sente.packers.transit :as sente-transit]
+     [hiccup.page :refer [include-css]]))
 
 ;;;; Logging config
 ;; (sente/set-logging-level! :trace) ; Uncomment for more logging
@@ -58,6 +59,13 @@
    [:p [:input#input-login {:type :text :placeholder "User-id"}]
     [:button#btn-login {:type "button"} "Secure login!"]]
    [:script {:src "main.js"}])) ; Include our cljs target
+
+(defn index-page-handler [req]
+  (hiccup/html
+    (include-css "//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css")    
+    [:h1.jutsu-header "Jutsu 術"
+     [:style "body {text-align: center; background-color: #ebd5f2;}"]]
+    [:script {:src "main.js"}]))
    
 
 (defn login!
@@ -71,7 +79,7 @@
     {:status 200 :session (assoc session :uid user-id)}))
 
 (defroutes my-routes
-  (GET  "/"      req (landing-pg-handler req))
+  (GET  "/"      req (index-page-handler req))
   (GET  "/chsk"  req (ring-ajax-get-or-ws-handshake req))
   (POST "/chsk"  req (ring-ajax-post                req))
   (POST "/login" req (login! req))
@@ -89,7 +97,7 @@
 (defmulti event-msg-handler :id) ; Dispatch on event-id
    ;; Wrap for logging, catching, etc.:
 (defn event-msg-handler* [{:as ev-msg :keys [id ?data event]}]
-  (debugf "Event: %s" event)
+  ;(debugf "Event: %s" event)
   (event-msg-handler ev-msg))
 
 (do ; Server-side methods
@@ -97,7 +105,7 @@
       [{:as ev-msg :keys [event id ?data ring-req ?reply-fn send-fn]}]
       (let [session (:session ring-req)
             uid     (:uid     session)]
-        (debugf "Unhandled event: %s" event)
+        ;(debugf "Unhandled event: %s" event)
         (when ?reply-fn
           (?reply-fn {:umatched-event-as-echoed-from-from-server event})))))
 
@@ -134,7 +142,7 @@
                             (or port 0)) ; 0 => auto (any available) port
                             
         uri (format "http://localhost:%s/" port)]
-    (debugf "Web server is running at `%s`" uri)
+    ;(debugf "Web server is running at `%s`" uri)
     (try
       (.browse (java.awt.Desktop/getDesktop) (java.net.URI. uri))
       (catch java.awt.HeadlessException _))
