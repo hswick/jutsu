@@ -20,7 +20,6 @@
  '[adzerk.boot-cljs      :refer [cljs]]
  '[adzerk.boot-reload    :refer [reload]]
  '[nightlight.boot :refer [nightlight]]
- '[pandeiro.boot-http :refer [serve]]
  '[samestep.boot-refresh :refer [refresh]])
 
 (try

@@ -109,9 +109,19 @@
     (doseq [i (range 100)]
       (chsk-send! uid [:fast-push/is-fast (str "hello " i "!!")]))))
 
-(defn graph []
-  (doseq [uid (:any @connected-uids)]
-    (chsk-send! uid [:graph/graph (str "Sending graph")])))
+;;Data has to be vector should throw error if isnt
+(defn graph
+  ([data] (graph data {}))
+  ([data layout]
+   (doseq [uid (:any @connected-uids)]
+    (chsk-send! uid [:graph/graph {:data data
+                                   :layout layout}]))))
+
+(defn test-graph []
+  (graph [{:x [1 2 3 4]
+           :y [1 2 3 4]
+           :mode "markers"
+           :type "scatter"}]))
 
 ;;;; Init
 

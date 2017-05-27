@@ -19,14 +19,12 @@
 (def graph-count (atom 0))
 
 (defn draw-plot!
-  []
+  [data layout]
   (append-to-body! (html [(keyword (str "div#graph-container-" @graph-count))]))
   (js/Plotly.newPlot
     (str "graph-container-" @graph-count)
-    (clj->js [{:x ["2013-10-04 22:23:00" "2013-11-04 22:23:00" "2013-12-04 22:23:00"]
-               :y [4 5 6]
-               :type "line"}])
-    (clj->js {:margin {:t 0}}))
+    (clj->js data)
+    (clj->js layout))
   (swap! graph-count inc))
 
 ;; (sente/set-logging-level! :trace) ; Uncomment for more logging
@@ -72,9 +70,11 @@
     [{:as ev-msg :keys [?data]}]
     (debugf "Push event from server: %s" ?data)
     (when (= :graph/graph (first ?data))
-      (draw-plot!)))
-      
-      
+      (draw-plot! 
+        (:data (second ?data))
+        (:layout (second ?data)))
+        
+      ))    
   (defmethod event-msg-handler :chsk/handshake
     [{:as ev-msg :keys [?data]}]
     (let [[?uid ?csrf-token ?handshake-data] ?data]
