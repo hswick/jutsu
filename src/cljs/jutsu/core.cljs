@@ -5,14 +5,29 @@
    [taoensso.encore :as enc    :refer (tracef debugf infof warnf errorf)]
    [taoensso.sente  :as sente  :refer (cb-success?)]
    ;; Optional, for Transit encoding:
-   [taoensso.sente.packers.transit :as sente-transit])
+   [taoensso.sente.packers.transit :as sente-transit]
+   [hiccups.runtime :as hiccupsrt]
+   [cljsjs.plotly])
  (:require-macros
-   [cljs.core.async.macros :as asyncm :refer (go go-loop)]))
+   [cljs.core.async.macros :as asyncm :refer (go go-loop)]
+   [hiccups.core :as hiccups :refer [html]]))
 
 ;;Will probably replace this with reagent
 (defn append-to-body! [el]
   (.insertAdjacentHTML (.-body js/document) "beforeEnd" el))
-;;;; Logging config
+
+(def graph-count (atom 0))
+
+(defn draw-plot!
+  []
+  (append-to-body! (html [(keyword (str "div#graph-container-" @graph-count))]))
+  (js/Plotly.newPlot
+    (str "graph-container-" @graph-count)
+    (clj->js [{:x ["2013-10-04 22:23:00" "2013-11-04 22:23:00" "2013-12-04 22:23:00"]
+               :y [4 5 6]
+               :type "line"}])
+    (clj->js {:margin {:t 0}}))
+  (swap! graph-count inc))
 
 ;; (sente/set-logging-level! :trace) ; Uncomment for more logging
 ;;;; Packer (client<->server serializtion format) config
@@ -55,7 +70,10 @@
       
   (defmethod event-msg-handler :chsk/recv
     [{:as ev-msg :keys [?data]}]
-    (debugf "Push event from server: %s" ?data))
+    (debugf "Push event from server: %s" ?data)
+    (when (= :graph/graph (first ?data))
+      (draw-plot!)))
+      
       
   (defmethod event-msg-handler :chsk/handshake
     [{:as ev-msg :keys [?data]}]
@@ -113,7 +131,6 @@
 (defn start-router! []
   (stop-router!)
   (reset! router_ (sente/start-chsk-router! ch-chsk event-msg-handler*)))
-
 
 (defn start! []
   (start-router!))

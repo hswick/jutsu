@@ -4,7 +4,6 @@
                   [adzerk/boot-reload    "0.5.1"      :scope "test"]
                   [nightlight "1.6.3" :scope "test"]
                   [samestep/boot-refresh "0.1.0" :scope "test"]
-                  [pandeiro/boot-http "0.8.3"]
                   [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                   [com.taoensso/sente        "1.5.0-RC2"] ; <--- Sente
                   [http-kit                  "2.1.19"]
@@ -14,7 +13,8 @@
                   [hiccup                    "1.0.5"] ; Optional, just for HTML
                   [com.cognitect/transit-clj  "0.8.275"];;; Transit deps optional; may be used to aid perf. of larger data payloads
                   [com.cognitect/transit-cljs "0.8.220"]
-                  [hiccups "0.3.0"]])
+                  [hiccups "0.3.0"]
+                  [cljsjs/plotly "1.25.0-0"]])
 
 (require
  '[adzerk.boot-cljs      :refer [cljs]]
@@ -42,4 +42,6 @@
    (cljs :source-map true)
    (reload)
    (refresh)
-   (repl :init-ns 'jutsu.core)))
+   (repl 
+     :init-ns 'jutsu.core
+     :eval '(start!))))
