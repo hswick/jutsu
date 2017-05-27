@@ -109,6 +109,10 @@
     (doseq [i (range 100)]
       (chsk-send! uid [:fast-push/is-fast (str "hello " i "!!")]))))
 
+(defn graph []
+  (doseq [uid (:any @connected-uids)]
+    (chsk-send! uid [:graph/graph (str "Sending graph")])))
+
 ;;;; Init
 
 (defonce web-server_ (atom nil)) ; {:server _ :port _ :stop-fn (fn [])}

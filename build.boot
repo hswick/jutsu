@@ -1,8 +1,9 @@
 (set-env!
  :source-paths   #{"src/clj" "src/cljs"}
-  :dependencies '[[adzerk/boot-cljs      "0.0-3269-2" :scope "test"]
+  :dependencies '[[adzerk/boot-cljs      "2.0.0" :scope "test"]
                   [adzerk/boot-reload    "0.5.1"      :scope "test"]
                   [nightlight "1.6.3" :scope "test"]
+                  [samestep/boot-refresh "0.1.0" :scope "test"]
                   [pandeiro/boot-http "0.8.3"]
                   [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                   [com.taoensso/sente        "1.5.0-RC2"] ; <--- Sente
@@ -12,13 +13,15 @@
                   [compojure                 "1.3.4"] ; Or routing lib of your choice
                   [hiccup                    "1.0.5"] ; Optional, just for HTML
                   [com.cognitect/transit-clj  "0.8.275"];;; Transit deps optional; may be used to aid perf. of larger data payloads
-                  [com.cognitect/transit-cljs "0.8.220"]])
+                  [com.cognitect/transit-cljs "0.8.220"]
+                  [hiccups "0.3.0"]])
 
 (require
  '[adzerk.boot-cljs      :refer [cljs]]
  '[adzerk.boot-reload    :refer [reload]]
  '[nightlight.boot :refer [nightlight]]
- '[pandeiro.boot-http :refer [serve]])
+ '[pandeiro.boot-http :refer [serve]]
+ '[samestep.boot-refresh :refer [refresh]])
 
 (try
  (require 'jutsu.core)
@@ -38,4 +41,5 @@
    (watch)
    (cljs :source-map true)
    (reload)
+   (refresh)
    (repl :init-ns 'jutsu.core)))
