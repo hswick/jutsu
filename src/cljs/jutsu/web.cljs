@@ -39,7 +39,6 @@
   (debugf "Event: %s" event)
   (event-msg-handler ev-msg))
 
-
 (defn init-client-side-events! [event-handler] ; Client-side methods
   (defmethod event-msg-handler :default ; Fallback
     [{:as ev-msg :keys [event]}]

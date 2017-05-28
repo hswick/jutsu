@@ -47,17 +47,6 @@
      [:style "body {text-align: center; background-color: #ebd5f2;}"]]
     [:script {:src "main.js"}]))
 
-;;Shows how you can write to session
-(defn login!
-  "Here's where you'll add your server-side login/auth procedure (Friend, etc.).
-  In our simplified example we'll just always successfully authenticate the user
-  with whatever user-id they provided in the auth request."
-  [ring-request]
-  (let [{:keys [session params]} ring-request
-        {:keys [user-id]} params]
-    (debugf "Login request: %s" params)
-    {:status 200 :session (assoc session :uid user-id)}))
-
 (defroutes my-routes
   (GET  "/"      req (index-page-handler req))
   (GET  "/chsk"  req (ring-ajax-get-or-ws-handshake req))

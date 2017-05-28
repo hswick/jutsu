@@ -3,11 +3,11 @@
    [clojure.string  :as str]
    [hiccups.runtime :as hiccupsrt]
    [cljsjs.plotly]
-   [jutsu.web :as web])
+   [jutsu.web :as web]
+   [cljs.core.match :refer-macros [match]])
  (:require-macros
    [hiccups.core :as hiccups :refer [html]]))
 
-;;Will probably replace this with reagent
 (defn append-to-body! [el]
   (.insertAdjacentHTML (.-body js/document) "beforeEnd" el))
 
@@ -28,9 +28,10 @@
 (web/init-client-side-events!
   (fn
     [?data]
-    (when (= :graph/graph (first ?data)
-            (draw-plot! 
+    (match (first ?data)
+      :graph/graph 
+      (draw-plot! 
              (:data (second ?data))
-             (:layout (second ?data)))))))
+             (:layout (second ?data))))))
 
 (web/start!)
