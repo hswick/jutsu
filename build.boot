@@ -34,13 +34,19 @@
   (nightlight :port 4000)))
 
 (deftask dev
-  "Run a restartable system in the Repl"
+  "Run a restartable system for development"
   []
   (comp
    (watch)
    (cljs :source-map true)
    (reload)
    (refresh)
-   (repl 
-     :init-ns 'jutsu.core
-     :eval '(start!))))
+   (repl
+    :server true
+    :init-ns 'jutsu.core)))
+
+(deftask jutsu-repl
+ []
+ (comp
+  (repl 
+    :client true)))

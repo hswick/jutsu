@@ -20,7 +20,7 @@
 
 (defn draw-plot!
   [data layout]
-  (append-to-body! (html [:div.container
+  (append-to-body! (html [:div.container                          
                           [:style (str ".container {text-align: left;}")]
                           [:h1 (str "graph " @graph-count)]
                           [(keyword (str "div#inner-graph-container-" @graph-count))]]))

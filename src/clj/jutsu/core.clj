@@ -63,10 +63,9 @@
 (defn index-page-handler [req]
   (hiccup/html
     (include-css "//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css")    
-    [:h1.jutsu-header "Jutsu 術"
+    [:h1.jutsu-header "jutsu 術"
      [:style "body {text-align: center; background-color: #ebd5f2;}"]]
     [:script {:src "main.js"}]))
-   
 
 (defn login!
   "Here's where you'll add your server-side login/auth procedure (Friend, etc.).
