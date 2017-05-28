@@ -8,6 +8,8 @@
  (:require-macros
    [hiccups.core :as hiccups :refer [html]]))
 
+(.log js/console js/Plotly)
+
 (defn append-to-body! [el]
   (.insertAdjacentHTML (.-body js/document) "beforeEnd" el))
 
@@ -25,15 +27,27 @@
       (clj->js data)
       (clj->js layout))))
 
+(defn extend-traces!
+  [meta-data data]
+  (.extendTraces js/Plotly
+    (str "graph-" (:id meta-data))
+    (clj->js (:data data))
+    (clj->js (:traces data))))
+    
+
 (web/init-client-side-events!
   (fn
     [?data]
     (match (first ?data)
-      :graph/graph 
+      :graph/graph
       (draw-plot! 
-             (:meta-data (second ?data))
-             (:data (second ?data))
-             (:layout (second ?data)))
+        (:meta-data (second ?data))
+        (:data (second ?data))
+        (:layout (second ?data)))
+      :graph/update
+      (extend-traces! 
+        (:meta-data (second ?data))
+        (:data (second ?data)))
       :else
       (.log js/console (str "Unhandled event " ?data)))))
 

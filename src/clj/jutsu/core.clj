@@ -40,5 +40,8 @@
   [id data]
   (doseq [uid (:any @web/connected-uids)]
     (web/chsk-send! uid [:graph/update
-                         {:id id
+                         {:meta-data {:id id}
                           :data data}])))
+
+(defn test-update-graph! []
+  (update-graph! "foo" {:data {:y [[4]] :x [[5]] :traces [0]}}))
