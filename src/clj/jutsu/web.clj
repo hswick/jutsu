@@ -51,7 +51,6 @@
   (GET  "/"      req (index-page-handler req))
   (GET  "/chsk"  req (ring-ajax-get-or-ws-handshake req))
   (POST "/chsk"  req (ring-ajax-post                req))
-  (POST "/login" req (login! req))
   (route/not-found "<h1>Page not found</h1>"))
 
 (def my-ring-handler
