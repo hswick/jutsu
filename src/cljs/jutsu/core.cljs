@@ -1,6 +1,6 @@
 (ns jutsu.core
  (:require
-   [clojure.string  :as str]
+   [clojure.string  :as string]
    [hiccups.runtime :as hiccupsrt]
    [cljsjs.plotly]
    [jutsu.web :as web]
@@ -11,19 +11,19 @@
 (defn append-to-body! [el]
   (.insertAdjacentHTML (.-body js/document) "beforeEnd" el))
 
-(def graph-count (atom 0))
-
 (defn draw-plot!
-  [data layout]
-  (append-to-body! (html [:div.container                          
-                          [:style (str ".container {text-align: left;}")]
-                          [:h1 (str "graph " @graph-count)]
-                          [(keyword (str "div#inner-graph-container-" @graph-count))]]))
-  (js/Plotly.newPlot
-    (str "inner-graph-container-" @graph-count)
-    (clj->js data)
-    (clj->js layout))
-  (swap! graph-count inc))
+  [meta-data data layout]
+  (let [meta (clj->js meta-data)
+        id (aget meta "id")]
+    (when (not (.getElementById js/document (str "graph-" id)))
+      (append-to-body! (html [:div.container                         
+                              [:style (str ".container {text-align: left;}")]
+                              [:h1 (str id)]
+                              [(keyword (str "div#graph-" id))]])))
+    (js/Plotly.newPlot
+      (str "graph-" id)
+      (clj->js data)
+      (clj->js layout))))
 
 (web/init-client-side-events!
   (fn
@@ -31,7 +31,10 @@
     (match (first ?data)
       :graph/graph 
       (draw-plot! 
+             (:meta-data (second ?data))
              (:data (second ?data))
-             (:layout (second ?data))))))
+             (:layout (second ?data)))
+      :else
+      (.log js/console (str "Unhandled event " ?data)))))
 
 (web/start!)
