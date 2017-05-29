@@ -21,7 +21,10 @@ This app is essentially plotly.js api connected to a repl server via sente.
    :type "scatter"})
    
 ;;To do realtime updates of a graph
-(jutsu/update-graph! "foo" {:data {:y [[4]] :x [[5]] :traces [0]}})
+(update-graph!  
+  {:id "foo"}
+  {:data {:y [[4]] :x [[5]]} 
+   :traces [0]}))
 ```
 
 ## Dev
