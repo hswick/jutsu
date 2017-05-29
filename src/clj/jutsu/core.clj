@@ -1,8 +1,11 @@
 (ns jutsu.core
   (:require [jutsu.web :as web]))
 
-;;Initializes the jutsu server and opens client in browser
-(defn start-jutsu! [] (web/start!))
+;;Initializes the jutsu server
+;;Initializes the jutsu server router for sente
+;;opens client in browser
+;;TODO: options map for server (turn off auto open client)
+(defn start-server! [] (web/start!))
 
 (def graph-count (atom 0))
 

@@ -8,8 +8,6 @@
  (:require-macros
    [hiccups.core :as hiccups :refer [html]]))
 
-(.log js/console js/Plotly)
-
 (defn append-to-body! [el]
   (.insertAdjacentHTML (.-body js/document) "beforeEnd" el))
 
