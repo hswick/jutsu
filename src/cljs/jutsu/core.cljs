@@ -33,7 +33,6 @@
     (str "graph-" (:id meta-data))
     (clj->js (:data data))
     (clj->js (:traces data))))
-    
 
 (web/init-client-side-events!
   (fn
