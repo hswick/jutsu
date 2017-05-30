@@ -1,5 +1,7 @@
 (ns jutsu.core
-  (:require [jutsu.web :as web]))
+  (:require [jutsu.web :as web]
+            [jutsu.data :refer :all])
+  (:import [org.nd4j.linalg.dimensionalityreduction PCA]))
 
 ;;Initializes the jutsu server
 ;;Initializes the jutsu server router for sente
@@ -10,6 +12,7 @@
 (def graph-count (atom 0))
 
 ;;Data has to be vector should throw error if isnt
+;;Should change meta-data to id
 (defn graph!
   "Sends graph data to client to be visualized"
   ([meta-data data] (graph! meta-data data {}))
@@ -21,7 +24,7 @@
                           :meta-data 
                           (merge meta-data
                             (if (:id meta-data) {}
-                              {:id @graph-count}))}]))
+                              {:id (str "graph-" @graph-count)}))}]))
    (swap! graph-count inc)))
 
 (defn test-graph []
@@ -51,3 +54,14 @@
     {:id "foo"}
     {:data {:y [[4]] :x [[5]]} 
      :traces [0]}))
+
+(defn test-iris! []
+  (let [data (rest (csv->clj "iris.csv"))]
+   (graph! {:id "test-iris"}
+     [{:x (map first data) 
+       :y (map second data)
+       :mode "markers" 
+       :type "scatter"}])))
+  
+  
+

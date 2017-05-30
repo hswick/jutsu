@@ -1,5 +1,6 @@
 (set-env!
- :source-paths   #{"src/clj" "src/cljs"}
+  :source-paths   #{"src/clj" "src/cljs"}
+  :resource-paths #{"resources"}
   :dependencies '[[adzerk/boot-cljs      "2.0.0" :scope "test"]
                   [adzerk/boot-reload    "0.5.1"      :scope "test"]
                   [nightlight "1.6.3" :scope "test"]
@@ -15,7 +16,11 @@
                   [com.cognitect/transit-cljs "0.8.220"]
                   [hiccups "0.3.0"]
                   [cljsjs/plotly "1.25.0-0"]
-                  [org.clojure/core.match "0.3.0-alpha4"]])
+                  [org.clojure/core.match "0.3.0-alpha4"]
+                  [org.datavec/datavec-api "0.8.0"]
+                  [org.deeplearning4j/deeplearning4j-core "0.8.0"]
+                  [org.nd4j/nd4j-native "0.8.0"]
+                  [org.nd4j/nd4j-api "0.8.0"]])
 
 (require
  '[adzerk.boot-cljs      :refer [cljs]]
@@ -46,7 +51,7 @@
     :server true
     :init-ns 'jutsu.core)))
 
-(deftask jutsu-repl
+(deftask repl-client
  []
  (comp
   (repl 

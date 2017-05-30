@@ -27,17 +27,29 @@ This app is essentially plotly.js api connected to a repl server via sente.
    :traces [0]}))
 ```
 
+### Client Side Web Socket
+Sente receives event via chsk/receive, an event handler can be passed to deal with all the events.
+Currently using core.match to deal with events:
+:graph/graph
+:graph/update-graph
+
+### Server Side Web Socket
+Server side router sends and receives events to the client-side-router. 
+Jutsu works by sending data to the client side to be visualized.
+All computations are done on the server
+
 ## Dev
 
-boot night to edit
+Run all three commands in separate tabs for optimal dev experience.
 
-boot dev to run
+`boot night` to edit
+
+`boot dev` to run
+
+`boot repl-client` to connect to repl server started with `boot dev`.
 
 ## More
 [[https://github.com/danielsz/sente-boot][What jutsu started as]]
-
-Useful cljs clj app configuring
-https://github.com/magomimmo/modern-cljs/blob/master/doc/second-edition/tutorial-09.md
 
 Would like to create the UI as FSM demonstrated here
 http://blog.cognitect.com/blog/2017/5/22/restate-your-ui-using-state-machines-to-simplify-user-interface-development
