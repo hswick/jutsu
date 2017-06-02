@@ -70,6 +70,7 @@
                   (map #(take 4 %))
                   (map strings->floats)
                   clj->nd4j
+                  normalize-zero
                   ((fn [ndarray] (pca ndarray 2))))]
     (graph! {:id "test-iris"}
       [{:x (map first data)

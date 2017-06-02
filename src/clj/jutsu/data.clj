@@ -116,12 +116,17 @@
         factors (->> (map-indexed (fn [i n] [n i]) (:eigenvalues svd-comps))
                      (sort-by first)
                      reverse
-                     (map (fn [[eigenvalue id]] (.getColumn (:eigenvectors svd-comps) id)))
                      (take num-dims)
+                     (map (fn [[eigenvalue id]] (.getColumn (:eigenvectors svd-comps) id)))
                      hstack-arrays)]
     (.mmul ndarray factors)))
 
-(defn normalize [ndarray]
+(defn normalize-zero [ndarray]
+  (let [mn (Nd4j/mean ndarray 0)]
+    (.subiRowVector ndarray mn)
+    ndarray))
+
+(defn normalize! [ndarray]
   (Transforms/normalizeZeroMeanAndUnitVariance ndarray))
                                 
     
