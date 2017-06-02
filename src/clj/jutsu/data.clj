@@ -3,8 +3,10 @@
            [org.datavec.api.records.reader.impl.csv CSVRecordReader]
            [org.datavec.api.split FileSplit]
            [org.deeplearning4j.datasets.datavec RecordReaderDataSetIterator]
-           [org.nd4j.linalg.factory Nd4j]))
-           
+           [org.nd4j.linalg.factory Nd4j]
+           [org.nd4j.linalg.eigen Eigen]
+           [org.nd4j.linalg.api.ops.impl.accum Variance]))
+
 (defn absolute-path [filename]
   (-> (ClassPathResource. filename)
       (.getFile)
@@ -60,4 +62,71 @@
       (let [new-array (Nd4j/create h w)]
         (doseq [i (range 0 h)]
           (.putRow new-array i (Nd4j/create (float-array (seq (nth coll i))))))
-        new-array))))  
+        new-array))))
+
+(defn mean [ndarray]
+  (let [shape (.shape ndarray)
+        nrows (first shape)
+        ncols (second shape)
+        new-array (Nd4j/zeros 1 ncols)]
+    (doseq [i (range nrows)]
+      (.addi new-array (.getRow ndarray i)))
+    new-array))
+
+(defn covariance [ndarray]
+    (let [average (mean ndarray)
+          shape (.shape ndarray)
+          sum (Nd4j/zeros (second shape) (second shape))]
+      (doseq [i (range 0 (first shape))]
+        (let [variance (.sub (.getRow ndarray i) average)
+              row-covar (.mmul (.transpose (.dup variance)) variance)]
+          (.addi sum row-covar)))         
+      (.div sum (first shape))))
+
+(defn svd-decomp [ndarray]
+  (let [shape (.shape ndarray)
+        rows (first shape)
+        cols (second shape)
+        s (Nd4j/create (if (< rows cols) rows cols))
+        vt (Nd4j/create cols cols)]
+    (.sgesvd (.lapack (Nd4j/getBlasWrapper))
+      ndarray s nil vt)
+    {:eigenvalues s :eigenvectors vt}))
+
+;;Stacks a collection of ndarrays vertically (by row)
+(defn vstack-arrays [ndarrays]
+  (let [shape (.shape (first ndarrays))
+        new-array (Nd4j/create (count ndarrays) (second shape))]
+    (doseq [n (range 0 (count ndarrays))]
+      (.putRow new-array n (nth ndarrays n)))
+    new-array))
+
+;;Stacks a collection of ndarrays horizontally
+(defn hstack-arrays [ndarrays]
+  (let [shape (.shape (first ndarrays))
+        new-array (Nd4j/create (first shape) (count ndarrays))]
+    (doseq [n (range 0 (count ndarrays))]
+      (.putColumn new-array n (nth ndarrays n)))
+    new-array))
+  
+
+(defn pca [ndarray num-dims]
+  (let [covar (covariance ndarray)
+        svd-comps (svd-decomp covar)
+        factors (->> (map-indexed (fn [i n] [n i]) (:eigenvalues svd-comps))
+                     (sort-by first)
+                     reverse
+                     (map (fn [[eigenvalue id]] (.getColumn (:eigenvectors svd-comps) id)))
+                     (take num-dims)
+                     hstack-arrays)]
+    (println factors)
+    (.mmul ndarray factors)))
+                                
+    
+
+    
+
+
+
+
+

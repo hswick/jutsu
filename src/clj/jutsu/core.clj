@@ -55,13 +55,25 @@
     {:data {:y [[4]] :x [[5]]} 
      :traces [0]}))
 
-(defn test-iris! []
-  (let [data (rest (csv->clj "iris.csv"))]
-   (graph! {:id "test-iris"}
-     [{:x (map first data) 
-       :y (map second data)
-       :mode "markers" 
-       :type "scatter"}])))
-  
-  
+(defn test-covar []
+   (let [data (->> (csv->clj "iris.csv")
+                  rest
+                  (map #(take 4 %))
+                  (map strings->floats)
+                  clj->nd4j
+                  ((fn [ndarray] (pca ndarray 2))))]
+     data))
 
+(defn test-iris! []
+  (let [data (->> (csv->clj "iris.csv")
+                  rest
+                  (map #(take 4 %))
+                  (map strings->floats)
+                  clj->nd4j
+                  ((fn [ndarray] (pca ndarray 2)))
+                  nd4j->clj)]
+    (graph! {:id "test-iris"}
+      [{:x (map first data) 
+        :y (map second data)
+        :mode "markers" 
+        :type "scatter"}])))
