@@ -4,8 +4,7 @@
            [org.datavec.api.split FileSplit]
            [org.deeplearning4j.datasets.datavec RecordReaderDataSetIterator]
            [org.nd4j.linalg.factory Nd4j]
-           [org.nd4j.linalg.eigen Eigen]
-           [org.nd4j.linalg.api.ops.impl.accum Variance]))
+           [org.nd4j.linalg.ops.transforms Transforms]))
 
 (defn absolute-path [filename]
   (-> (ClassPathResource. filename)
@@ -45,6 +44,7 @@
 (defn cols [coll]
   (if (seq? (first coll)) (count (first coll)) (count coll)))
 
+;;Grabbing first value, this isnt correct
 (defn nd4j->clj [nd4j-array]
   (if (= 1 (first (.shape nd4j-array)))
     (into [] nd4j-array)
@@ -119,8 +119,10 @@
                      (map (fn [[eigenvalue id]] (.getColumn (:eigenvectors svd-comps) id)))
                      (take num-dims)
                      hstack-arrays)]
-    (println factors)
     (.mmul ndarray factors)))
+
+(defn normalize [ndarray]
+  (Transforms/normalizeZeroMeanAndUnitVariance ndarray))
                                 
     
 

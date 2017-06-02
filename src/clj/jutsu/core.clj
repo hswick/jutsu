@@ -70,10 +70,9 @@
                   (map #(take 4 %))
                   (map strings->floats)
                   clj->nd4j
-                  ((fn [ndarray] (pca ndarray 2)))
-                  nd4j->clj)]
+                  ((fn [ndarray] (pca ndarray 2))))]
     (graph! {:id "test-iris"}
-      [{:x (map first data) 
-        :y (map second data)
+      [{:x (map first data)
+        :y (map #(.getDouble % 0 1) data)
         :mode "markers" 
         :type "scatter"}])))
