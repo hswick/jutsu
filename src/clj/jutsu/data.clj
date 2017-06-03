@@ -91,7 +91,7 @@
         vt (Nd4j/create cols cols)]
     (.sgesvd (.lapack (Nd4j/getBlasWrapper))
       ndarray s nil vt)
-    {:eigenvalues s :eigenvectors vt}))
+    {:singularvalues s :eigenvectors_transposed vt}))
 
 ;;Stacks a collection of ndarrays vertically (by row)
 (defn vstack-arrays [ndarrays]
@@ -109,17 +109,16 @@
       (.putColumn new-array n (nth ndarrays n)))
     new-array))
   
-
 (defn pca [ndarray num-dims]
   (let [covar (covariance ndarray)
         svd-comps (svd-decomp covar)
-        factors (->> (map-indexed (fn [i n] [n i]) (:eigenvalues svd-comps))
+        factors (->> (map-indexed (fn [i n] [n i]) (:singularvalues svd-comps))
                      (sort-by first)
                      reverse
                      (take num-dims)
-                     (map (fn [[eigenvalue id]] (.getColumn (:eigenvectors svd-comps) id)))
-                     hstack-arrays)]
-    (.mmul ndarray factors)))
+                     (map (fn [[eigenvalue id]] (.getRow (:eigenvectors_transposed svd-comps) id)))
+                     vstack-arrays)]
+    (.mmul ndarray (.transpose factors))))
 
 (defn normalize-zero [ndarray]
   (let [mn (Nd4j/mean ndarray 0)]
@@ -128,12 +127,3 @@
 
 (defn normalize! [ndarray]
   (Transforms/normalizeZeroMeanAndUnitVariance ndarray))
-                                
-    
-
-    
-
-
-
-
-

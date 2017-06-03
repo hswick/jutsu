@@ -64,16 +64,29 @@
                   ((fn [ndarray] (pca ndarray 2))))]
      data))
 
+(defn make-scatter-trace [m]
+  (merge {:mode "markers"
+          :type "scatter"}))
+
 (defn test-iris! []
-  (let [data (->> (csv->clj "iris.csv")
-                  rest
-                  (map #(take 4 %))
-                  (map strings->floats)
-                  clj->nd4j
-                  normalize-zero
-                  ((fn [ndarray] (pca ndarray 2))))]
-    (graph! {:id "test-iris"}
-      [{:x (map first data)
-        :y (map #(.getDouble % 0 1) data)
-        :mode "markers" 
-        :type "scatter"}])))
+  (let [dataset (-> (csv->clj "iris.csv")
+                    ((fn [data]
+                       {:coords (->> data
+                                     rest
+                                     (map #(take 4 %))
+                                     (map strings->floats)
+                                     clj->nd4j
+                                     normalize-zero
+                                     ((fn [ndarray] (pca ndarray 2))))
+                        :labels (map #(nth % 4) data)})))
+        split-labels-and-ids (rest (partition-by first (map-indexed (fn [id label] [label id]) (:labels dataset))))
+        graph-data (map 
+                    (fn [species-with-ids]
+                      {:x (map (fn [[label id]] (.getDouble (.getRow (:coords dataset) (dec id)) 0 0)) species-with-ids)
+                       :y (map (fn [[label id]] (.getDouble (.getRow (:coords dataset) (dec id)) 0 1)) species-with-ids)
+                       :text (map first species-with-ids)
+                       :name (ffirst species-with-ids)
+                       :mode "markers"
+                       :type "scatter"})
+                    split-labels-and-ids)]
+    (graph! {:id "test-iris"} graph-data)))
