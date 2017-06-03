@@ -19,6 +19,7 @@
     reader))
 
 ;;Options to string json (array of arrays)
+;;Should accept an argument about how to deal with next
 (defn till-no-next [nextable]
   (loop [data []]
     (if (not (.hasNext nextable))
@@ -26,7 +27,12 @@
       (recur (conj data
                (seq (.next nextable)))))))
 
+;;Best you can get is an iterator without lazy eval
+(defn csv->nd4j [filename]
+  (-> (csv-reader filename)
+      till-no-next))
 ;;Gets records of strings
+
 (defn line-records [data]
   (map (fn [row] (map #(String. (.getBytes %)) row)) data))
 
@@ -45,6 +51,7 @@
   (if (seq? (first coll)) (count (first coll)) (count coll)))
 
 ;;Grabbing first value, this isnt correct
+;;TODO: Need to fix
 (defn nd4j->clj [nd4j-array]
   (if (= 1 (first (.shape nd4j-array)))
     (into [] nd4j-array)
@@ -63,6 +70,8 @@
         (doseq [i (range 0 h)]
           (.putRow new-array i (Nd4j/create (float-array (seq (nth coll i))))))
         new-array))))
+
+;;Math functions and algorithms (generally nd4j specific)
 
 (defn mean [ndarray]
   (let [shape (.shape ndarray)
