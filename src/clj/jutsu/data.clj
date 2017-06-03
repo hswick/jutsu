@@ -127,3 +127,6 @@
 
 (defn normalize! [ndarray]
   (Transforms/normalizeZeroMeanAndUnitVariance ndarray))
+
+(defn get-double-from-row [ndarray row-index el-index]
+  (.getDouble (.getRow ndarray row-index) 0 el-index))

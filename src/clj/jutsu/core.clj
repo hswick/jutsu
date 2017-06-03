@@ -79,12 +79,19 @@
                                      normalize-zero
                                      ((fn [ndarray] (pca ndarray 2))))
                         :labels (map #(nth % 4) data)})))
-        split-labels-and-ids (rest (partition-by first (map-indexed (fn [id label] [label id]) (:labels dataset))))
-        graph-data (map 
+        split-labels-and-ids (->> (:labels dataset)
+                                  (map-indexed (fn [id label] [label id]))
+                                  (partition-by first)
+                                  rest)
+        graph-data (map
                     (fn [species-with-ids]
-                      {:x (map (fn [[label id]] (.getDouble (.getRow (:coords dataset) (dec id)) 0 0)) species-with-ids)
-                       :y (map (fn [[label id]] (.getDouble (.getRow (:coords dataset) (dec id)) 0 1)) species-with-ids)
-                       :text (map first species-with-ids)
+                      {:x (map (fn [[label id]]  
+                                 (get-double-from-row (:coords dataset) (dec id) 0)) 
+                            species-with-ids)
+                       :y (map (fn [[label id]] 
+                                 (get-double-from-row (:coords dataset) (dec id) 1)) 
+                            species-with-ids)
+                       ;:text (map first species-with-ids)
                        :name (ffirst species-with-ids)
                        :mode "markers"
                        :type "scatter"})
