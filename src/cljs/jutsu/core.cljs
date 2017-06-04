@@ -33,11 +33,13 @@
 (defn draw-dataset!
   [data]
   (.log js/console data)
-  (append-to-body! (html [:table
-                          (map (fn [data-row]
-                                 [:tr
-                                  (map (fn [item] [:td (str item)]) data-row)])
-                            data)])))
+  (append-to-body! (html [:div.container
+                          {:style "overflow: scroll; height: 25%;"}
+                          [:table.table-striped
+                           {:style "width: 100%;"}
+                           (for [data-row data]
+                             [:tr
+                              (map (fn [item] [:td (str item)]) data-row)])]])))
                                   
 
 (web/init-client-side-events!
