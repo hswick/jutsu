@@ -93,3 +93,11 @@
 
 (defn test-etl []
   (csv->nd4j "iris.csv"))
+
+(defn dataset! []
+  (doseq [uid (:any @web/connected-uids)]
+    (web/chsk-send! uid [:dataset/dataset 
+                         {:data [[1 2 3]
+                                 [4 5 6]
+                                 [6 7 8]
+                                 [9 10 11]]}]))) 

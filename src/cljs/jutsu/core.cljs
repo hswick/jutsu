@@ -30,6 +30,16 @@
     (clj->js (:data data))
     (clj->js (:traces data))))
 
+(defn draw-dataset!
+  [data]
+  (.log js/console data)
+  (append-to-body! (html [:table
+                          (map (fn [data-row]
+                                 [:tr
+                                  (map (fn [item] [:td (str item)]) data-row)])
+                            data)])))
+                                  
+
 (web/init-client-side-events!
   (fn
     [?data]
@@ -43,6 +53,8 @@
       (extend-traces! 
         (:id (second ?data))
         (:data (second ?data)))
+      :dataset/dataset
+      (draw-dataset! (:data (second ?data)))
       :else
       (.log js/console (str "Unhandled event " ?data)))))
 
