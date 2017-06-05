@@ -20,8 +20,8 @@
                   [org.datavec/datavec-api "0.8.0"]
                   [org.deeplearning4j/deeplearning4j-core "0.8.0"]
                   [org.nd4j/nd4j-native "0.8.0"]
-                  [org.nd4j/nd4j-api "0.8.0"]])
-
+                  [org.nd4j/nd4j-api "0.8.0"]
+                  [cheshire "5.7.1"]])
 (require
  '[adzerk.boot-cljs      :refer [cljs]]
  '[adzerk.boot-reload    :refer [reload]]

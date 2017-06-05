@@ -4,7 +4,12 @@
            [org.datavec.api.split FileSplit]
            [org.deeplearning4j.datasets.datavec RecordReaderDataSetIterator]
            [org.nd4j.linalg.factory Nd4j]
-           [org.nd4j.linalg.ops.transforms Transforms]))
+           [org.nd4j.linalg.ops.transforms Transforms]
+           [cheshire.core :refer [parse-string generate-string]]))
+
+(defn clj->json [data] (generate-string data))
+
+(defn json->clj [json-string] (parse-string json-string))
 
 (defn absolute-path [filename]
   (-> (ClassPathResource. filename)
