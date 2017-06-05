@@ -92,7 +92,7 @@
     (graph! "test-iris" graph-data)))
 
 (defn test-etl []
-  (csv->nd4j "iris.csv"))
+  (csv->nd4j-array "iris.csv" 4 true))
 
 (defn dataset! []
   (doseq [uid (:any @web/connected-uids)]

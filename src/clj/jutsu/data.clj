@@ -5,7 +5,11 @@
            [org.datavec.api.split FileSplit]
            [org.deeplearning4j.datasets.datavec RecordReaderDataSetIterator]
            [org.nd4j.linalg.factory Nd4j]
-           [org.nd4j.linalg.ops.transforms Transforms]))
+           [org.nd4j.linalg.ops.transforms Transforms]
+           [org.deeplearning4j.datasets.iterator ExistingDataSetIterator]
+           [org.nd4j.linalg.api.ndarray BaseNDArray]))
+
+(defn clj->nd4j-iterator [clj-data] (ExistingDataSetIterator. clj-data))
 
 (defn clj->json [data] (generate-string data))
 
@@ -31,11 +35,7 @@
       data
       (recur (conj data
                (seq (.next nextable)))))))
-
-;;Best you can get is an iterator without lazy eval
-(defn csv->nd4j [filename]
-  (-> (csv-reader filename)
-      till-no-next))
+       
 ;;Gets records of strings
 
 (defn line-records [data]
@@ -50,10 +50,30 @@
       (line-records)))
 
 (defn rows [coll]
-  (if (seq? (first coll)) (count coll) 1))
+  (if (instance? BaseNDArray coll)
+    (first (.shape coll))
+    (if (seq? (first coll)) (count coll) 1)))
 
 (defn cols [coll]
-  (if (seq? (first coll)) (count (first coll)) (count coll)))
+  (if (instance? BaseNDArray coll)
+    (second (.shape coll))
+    (if (seq? (first coll)) (count (first coll)) (count coll))))
+
+;;Stacks a collection of ndarrays vertically (by row)
+(defn vstack-arrays [ndarrays]
+  (let [shape (.shape (first ndarrays))
+        new-array (Nd4j/create (count ndarrays) (second shape))]
+    (doseq [n (range 0 (count ndarrays))]
+      (.putRow new-array n (nth ndarrays n)))
+    new-array))
+
+;;Stacks a collection of ndarrays horizontally
+(defn hstack-arrays [ndarrays]
+  (let [shape (.shape (first ndarrays))
+        new-array (Nd4j/create (first shape) (count ndarrays))]
+    (doseq [n (range 0 (count ndarrays))]
+      (.putColumn new-array n (nth ndarrays n)))
+    new-array))
 
 (defn nd4j->clj [nd4j-array]
   (if (= 1 (first (.shape nd4j-array)))
@@ -73,6 +93,18 @@
         (doseq [i (range 0 h)]
           (.putRow new-array i (Nd4j/create (float-array (seq (nth coll i))))))
         new-array))))
+
+;;Best you can get is an iterator without lazy eval
+;;This is eager
+(defn csv->nd4j-array [filename label-index header]
+  (->> (csv-reader filename)
+       (till-no-next)
+       (map #(take label-index %))
+       ((fn [data]
+         (if header (rest data) data)))
+       (map (fn [row]
+              (map #(.toDouble %) row)))
+       clj->nd4j))
 
 ;;Math functions and algorithms (generally nd4j specific)
 
@@ -104,22 +136,6 @@
     (.sgesvd (.lapack (Nd4j/getBlasWrapper))
       ndarray s nil vt)
     {:singularvalues s :eigenvectors_transposed vt}))
-
-;;Stacks a collection of ndarrays vertically (by row)
-(defn vstack-arrays [ndarrays]
-  (let [shape (.shape (first ndarrays))
-        new-array (Nd4j/create (count ndarrays) (second shape))]
-    (doseq [n (range 0 (count ndarrays))]
-      (.putRow new-array n (nth ndarrays n)))
-    new-array))
-
-;;Stacks a collection of ndarrays horizontally
-(defn hstack-arrays [ndarrays]
-  (let [shape (.shape (first ndarrays))
-        new-array (Nd4j/create (first shape) (count ndarrays))]
-    (doseq [n (range 0 (count ndarrays))]
-      (.putColumn new-array n (nth ndarrays n)))
-    new-array))
   
 (defn pca [ndarray num-dims]
   (let [covar (covariance ndarray)
