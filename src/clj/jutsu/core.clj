@@ -70,7 +70,7 @@
                                      (map strings->floats)
                                      clj->nd4j
                                      normalize-zero
-                                     ((fn [ndarray] (pca ndarray 2))))
+                                     (pca 2))
                         :labels (map #(nth % 4) data)})))
         split-labels-and-ids (->> (:labels dataset)
                                   (map-indexed (fn [id label] [label id]))
@@ -91,49 +91,31 @@
                     split-labels-and-ids)]
     (graph! "test-iris" graph-data)))
 
+;;A dataset is a map that contains a data key which is an ndarray
+(defn partition-dataset [data-map k k2]
+  (let [partitioned-items (->> (get data-map k)
+                               (map-indexed (fn [id label] [label id]))
+                               (partition-by first))]
+    (for [items-chunk partitioned-items]
+      {k (map first items-chunk)
+       k2 (for [id (map second items-chunk)]
+            (.getRow (get data-map k2) (dec id)))})))
+
+(defn scatter-graph! [dataset]
+  dataset)
+
+(defn test-iris2! []
+  (let [dataset {:data (->> (csv->nd4j-array "iris.csv" 4 true)
+                            normalize-zero
+                            (pca 2))
+                 :labels (rest (map #(nth % 4) (csv->clj "iris.csv")))}]
+    (scatter-graph! (partition-dataset dataset :labels :data))))
+    
+
 (defn test-etl []
   (csv->nd4j-array "iris.csv" 4 true))
 
-(defn dataset! []
+(defn dataset! [data]
   (doseq [uid (:any @web/connected-uids)]
-    (web/chsk-send! uid [:dataset/dataset 
-                         {:data [[1 2 3]
-                                 [4 5 6]
-                                 [6 7 8]
-                                 [9 10 11]
-                                 [9 10 11]
-                                 [9 10 11]
-                                 [9 10 11]
-                                 [9 10 11]
-                                 [9 10 11]
-                                 [9 10 11]
-                                 [9 10 11]
-                                 [9 10 11]
-                                 [9 10 11]
-                                 [9 10 11]
-                                 [9 10 11]
-                                 [9 10 11]
-                                 [9 10 11]
-                                 [9 10 11]
-                                 [9 10 11]
-                                 [9 10 11]
-                                 [9 10 11]
-                                 [9 10 11]
-                                 [9 10 11]
-                                 [9 10 11]
-                                 [9 10 11]
-                                 [9 10 11]
-                                 [9 10 11]
-                                 [9 10 11]
-                                 [9 10 11]
-                                 [9 10 11]
-                                 [9 10 11]
-                                 [9 10 11]
-                                 [9 10 11]
-                                 [9 10 11]
-                                 [9 10 11]
-                                 [9 10 11]
-                                 [9 10 11]
-                                 [9 10 11]
-                                 [9 10 11]]}])))
+    (web/chsk-send! uid [:dataset/dataset {:data data}])))
  

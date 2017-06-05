@@ -117,6 +117,8 @@
       (.addi new-array (.getRow ndarray i)))
     new-array))
 
+(defn nd4j-zeros [rows cols] (Nd4j/zeros rows cols))
+
 (defn covariance [ndarray]
     (let [average (mean ndarray)
           shape (.shape ndarray)
@@ -137,7 +139,7 @@
       ndarray s nil vt)
     {:singularvalues s :eigenvectors_transposed vt}))
   
-(defn pca [ndarray num-dims]
+(defn pca [num-dims ndarray]
   (let [covar (covariance ndarray)
         svd-comps (svd-decomp covar)
         factors (->> (map-indexed (fn [i n] [n i]) (:singularvalues svd-comps))
