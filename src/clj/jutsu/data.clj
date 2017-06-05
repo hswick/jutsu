@@ -1,11 +1,11 @@
 (ns jutsu.data
+  (:require [cheshire.core :refer [parse-string generate-string]])
   (:import [org.datavec.api.util ClassPathResource]
            [org.datavec.api.records.reader.impl.csv CSVRecordReader]
            [org.datavec.api.split FileSplit]
            [org.deeplearning4j.datasets.datavec RecordReaderDataSetIterator]
            [org.nd4j.linalg.factory Nd4j]
-           [org.nd4j.linalg.ops.transforms Transforms]
-           [cheshire.core :refer [parse-string generate-string]]))
+           [org.nd4j.linalg.ops.transforms Transforms]))
 
 (defn clj->json [data] (generate-string data))
 
@@ -55,8 +55,6 @@
 (defn cols [coll]
   (if (seq? (first coll)) (count (first coll)) (count coll)))
 
-;;Grabbing first value, this isnt correct
-;;TODO: Need to fix
 (defn nd4j->clj [nd4j-array]
   (if (= 1 (first (.shape nd4j-array)))
     (into [] nd4j-array)
@@ -130,9 +128,9 @@
                      (sort-by first)
                      reverse
                      (take num-dims)
-                     (map (fn [[eigenvalue id]] (.getRow (:eigenvectors_transposed svd-comps) id)))
-                     vstack-arrays)]
-    (.mmul ndarray (.transpose factors))))
+                     (map (fn [[eigenvalue id]] (.getColumn (:eigenvectors_transposed svd-comps) id)))
+                     hstack-arrays)]
+    (.mmul ndarray factors)))
 
 (defn normalize-zero [ndarray]
   (let [mn (Nd4j/mean ndarray 0)]
