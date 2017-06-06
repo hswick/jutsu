@@ -1,8 +1,13 @@
 # Jutsu 術
 
-### Currently in a stage of hammock driven development
+## Currently in a stage of hammock driven development
 
-This app is essentially plotly.js api connected to a repl server via sente.
+Data Science Framework built with clojure design principles in mind.
+
+Easy to use abstractions that are decomposable for simplicity.
+
+Datasets are maps where the keys are columns and the elements are rows
+-Currently the concept of dataset assumes that rows of all columns are equal
 
 ## Usage
 
@@ -27,13 +32,16 @@ This app is essentially plotly.js api connected to a repl server via sente.
    :traces [0]}))
 ```
 
-### Client Side Web Socket
+##
+
+## Client Side Web Socket
 Sente receives event via chsk/receive, an event handler can be passed to deal with all the events.
 Currently using core.match to deal with events:
 :graph/graph
 :graph/update-graph
+:datset/dataset
 
-### Server Side Web Socket
+## Server Side Web Socket
 Server side router sends and receives events to the client-side-router. 
 Jutsu works by sending data to the client side to be visualized.
 All computations are done on the server

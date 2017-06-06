@@ -24,6 +24,29 @@
                           :id id}]))
    (swap! graph-count inc)))
 
+;;"Sends data to update graph with specified id"
+(defn update-graph!
+  [id data]
+  (doseq [uid (:any @web/connected-uids)]
+    (web/chsk-send! uid [:graph/update
+                         {:id id
+                          :data data}])))
+
+(defn dataset! [data]
+  (doseq [uid (:any @web/connected-uids)]
+    (web/chsk-send! uid [:dataset/dataset {:data data}])))
+
+;;Assumes you have a map with a key called :data
+(defn scatter-graph! [split-dataset]
+  (graph! "test-iris" (map
+                        (fn [dataset]
+                          {:x (map #(jutsu-nth % 0) (:data dataset))
+                           :y (map #(jutsu-nth % 1) (:data dataset)) 
+                           :name (first (:labels dataset))
+                           :mode "markers"
+                           :type "scatter"}
+                          split-dataset))))
+
 (defn test-graph []
   (graph! (str "graph-" @graph-count)
     [{:x [1 2 3 4]
@@ -38,13 +61,7 @@
       :mode "markers"
       :type "scatter"}]))
 
-;;"Sends data to update graph with specified id"
-(defn update-graph!
-  [id data]
-  (doseq [uid (:any @web/connected-uids)]
-    (web/chsk-send! uid [:graph/update
-                         {:id id
-                          :data data}])))
+
 
 (defn test-update-graph! []
   (update-graph!  
@@ -91,22 +108,22 @@
                     split-labels-and-ids)]
     (graph! "test-iris" graph-data)))
 
+(defn test-split []
+  (let [label-index 4]
+    (split-into-columns (csv->clj "iris.csv" false) 
+      [:data #(take label-index %) 
+       :labels #(nth % label-index)])))
 
-
-(defn scatter-graph! [dataset]
-  dataset)
-
-(defn test-iris2! []
-  (let [dataset {:data (->> (csv->nd4j-array "iris.csv" 4 true)
-                            normalize-zero
-                            (pca 2))
-                 :labels (rest (map #(nth % 4) (csv->clj "iris.csv")))}]
-    (partition-dataset dataset :labels [:data :labels])))
+(defn test-iris-3 []
+  (-> (csv->clj "iris.csv" true)
+      (split-into-columns [:data #(take 4 %) :labels #(nth % 4)])
+      (update :data #(->> (map strings->floats %)
+                          clj->nd4j
+                          normalize-zero
+                          (pca 2)))
+      (partition-by-column :labels)
+      (scatter-graph!)))
 
 (defn test-etl []
   (csv->nd4j-array "iris.csv" 4 true))
-
-(defn dataset! [data]
-  (doseq [uid (:any @web/connected-uids)]
-    (web/chsk-send! uid [:dataset/dataset {:data data}])))
  

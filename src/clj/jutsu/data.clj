@@ -17,16 +17,25 @@
         (.getDouble coll 0 index)))
     (nth coll index)))
 
+;;Define schema and pipe values into different streams (columns)
+(defn split-into-columns [rows schema]
+  (into {} (map
+             (fn [[column-name transform]]
+               [column-name (map transform rows)])
+             (partition 2 schema))))
+
 ;;Split or partial datasets are more important to programmers than the whole dataset
-(defn partition-dataset [dataset k1 ks]
-  (let [indexed-elements (map-indexed (fn [id item] [item id]) (get dataset k1))
-        split-indexed (partition-by first indexed-elements)]
-    (map (fn [grouping]
-           (into {} (map (fn [k] (if (= k1 k)
+(defn partition-by-column
+  ([dataset column] (partition-by-column dataset column (keys dataset)))
+  ([dataset column key-list]
+   (let [indexed-elements (map-indexed (fn [id item] [item id]) (get dataset column))
+         split-indexed (partition-by first indexed-elements)]
+     (map (fn [grouping]
+           (into {} (map (fn [k] (if (= column k)
                                    [k (map first grouping)]
                                    [k (map #(jutsu-nth (get dataset k) (second %)) grouping)]))
-                      ks)))
-      split-indexed)))
+                      key-list)))
+      split-indexed))))
 
 (defn clj->nd4j-iterator [clj-data] (ExistingDataSetIterator. clj-data))
 
@@ -63,10 +72,12 @@
 ;;Returns a lazyseq of edn data
 ;;Assumes there is a header
 ;:Returns a map of header and data
-(defn csv->clj [filename]
+(defn csv->clj [filename header]
   (-> (csv-reader filename)
       (till-no-next)
-      (line-records)))
+      (line-records)
+      ((fn [csv-data]
+         (if header (rest csv-data) csv-data)))))
 
 (defn rows [coll]
   (if (instance? INDArray coll)
