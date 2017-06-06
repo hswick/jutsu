@@ -116,7 +116,7 @@
 (defn test-iris-3 []
   (-> (csv->clj "iris.csv" false)
       (split-into-columns [:data (range 0 4) :labels 4])
-      (update :data #(->> (strings->floats %)
+      (update :data #(->> (map strings->floats %)
                           clj->nd4j
                           normalize-zero
                           (pca 2)))
