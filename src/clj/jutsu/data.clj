@@ -7,7 +7,26 @@
            [org.nd4j.linalg.factory Nd4j]
            [org.nd4j.linalg.ops.transforms Transforms]
            [org.deeplearning4j.datasets.iterator ExistingDataSetIterator]
-           [org.nd4j.linalg.api.ndarray BaseNDArray]))
+           [org.nd4j.linalg.api.ndarray INDArray]))
+
+(defn jutsu-nth [coll index]
+  (if (instance? INDArray coll)
+    (let [shape (.shape coll)]
+      (if (> (first shape) 1)
+        (.getRow coll index)
+        (.getDouble coll 0 index)))
+    (nth coll index)))
+
+;;Split or partial datasets are more important to programmers than the whole dataset
+(defn partition-dataset [dataset k1 ks]
+  (let [indexed-elements (map-indexed (fn [id item] [item id]) (get dataset k1))
+        split-indexed (partition-by first indexed-elements)]
+    (map (fn [grouping]
+           (into {} (map (fn [k] (if (= k1 k)
+                                   [k (map first grouping)]
+                                   [k (map #(jutsu-nth (get dataset k) (second %)) grouping)]))
+                      ks)))
+      split-indexed)))
 
 (defn clj->nd4j-iterator [clj-data] (ExistingDataSetIterator. clj-data))
 
@@ -50,12 +69,12 @@
       (line-records)))
 
 (defn rows [coll]
-  (if (instance? BaseNDArray coll)
+  (if (instance? INDArray coll)
     (first (.shape coll))
     (if (seq? (first coll)) (count coll) 1)))
 
 (defn cols [coll]
-  (if (instance? BaseNDArray coll)
+  (if (instance? INDArray coll)
     (second (.shape coll))
     (if (seq? (first coll)) (count (first coll)) (count coll))))
 

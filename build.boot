@@ -3,7 +3,7 @@
   :resource-paths #{"resources"}
   :dependencies '[[adzerk/boot-cljs      "2.0.0" :scope "test"]
                   [adzerk/boot-reload    "0.5.1"      :scope "test"]
-                  [nightlight "1.6.3" :scope "test"]
+                  [nightlight "1.6.5" :scope "test"]
                   [samestep/boot-refresh "0.1.0" :scope "test"]
                   [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                   [com.taoensso/sente        "1.5.0-RC2"] ; <--- Sente
