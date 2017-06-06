@@ -111,13 +111,12 @@
 (defn test-split []
   (let [label-index 4]
     (split-into-columns (csv->clj "iris.csv" false) 
-      [:data #(take label-index %) 
-       :labels #(nth % label-index)])))
+      [:data (range 0 4) :labels 4])))
 
 (defn test-iris-3 []
-  (-> (csv->clj "iris.csv" true)
-      (split-into-columns [:data #(take 4 %) :labels #(nth % 4)])
-      (update :data #(->> (map strings->floats %)
+  (-> (csv->clj "iris.csv" false)
+      (split-into-columns [:data (range 0 4) :labels 4])
+      (update :data #(->> (strings->floats %)
                           clj->nd4j
                           normalize-zero
                           (pca 2)))

@@ -18,10 +18,13 @@
     (nth coll index)))
 
 ;;Define schema and pipe values into different streams (columns)
+;;Schema should be a vector of ranges or values
 (defn split-into-columns [rows schema]
   (into {} (map
-             (fn [[column-name transform]]
-               [column-name (map transform rows)])
+             (fn [[column-name column-spec]]
+               [column-name (if (seq? column-spec)
+                              (map (fn [row] (map #(nth row %) column-spec)) rows)
+                              (map #(nth % column-spec) rows))])
              (partition 2 schema))))
 
 ;;Split or partial datasets are more important to programmers than the whole dataset
@@ -77,7 +80,7 @@
       (till-no-next)
       (line-records)
       ((fn [csv-data]
-         (if header (rest csv-data) csv-data)))))
+         (if header csv-data (rest csv-data))))))
 
 (defn rows [coll]
   (if (instance? INDArray coll)
