@@ -71,7 +71,7 @@
     [{:as ev-msg :keys [event id ?data ring-req ?reply-fn send-fn]}]
     (let [session (:session ring-req)
           uid     (:uid     session)]
-      (debugf "Unhandled event: %s" event)
+      ;(debugf "Unhandled event: %s" event)
       ;(debugf "Unhandled id: " id)
       (when ?reply-fn
         (?reply-fn {:umatched-event-as-echoed-from-from-server event}))))
@@ -125,10 +125,12 @@
   (reset! router_ (sente/start-chsk-router! ch-chsk event-msg-handler*)))
 
 ;;Default way to start up jutsu server
-(defn start! []
-  (init-server-event-handler! (fn [?data] (debugf (str ?data))))
-  (start-router!);;Have to call this to get websocket working
-  (-> (jutsu-routes)
-      jutsu-ring-handler
-      start-web-server!
-      display-uri!))
+(defn start!
+  ([] (start! (fn [?data])))
+  ([init-fn]
+   (init-server-event-handler! init-fn)
+   (start-router!);;Have to call this to get websocket working
+   (-> (jutsu-routes)
+       jutsu-ring-handler
+       start-web-server!
+       display-uri!)))
