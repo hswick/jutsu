@@ -1,7 +1,6 @@
 (ns jutsu.core
   (:require [jutsu.web :as web]
-            [jutsu.data :refer :all])
-  (:import [org.nd4j.linalg.dimensionalityreduction PCA]))
+            [jutsu.data :refer :all]))
 
 ;;Initializes the jutsu server
 ;;Initializes the jutsu server router for sente

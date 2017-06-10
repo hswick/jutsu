@@ -51,14 +51,15 @@
       (debugf "Channel socket state change: %s" ?data)))
       
   (defmethod event-msg-handler :chsk/recv
-    [{:as ev-msg :keys [?data]}]
+    [{:as ev-msg :keys [?data id]}]
     (debugf "Push event from server: %s" ?data)
     (event-handler ?data))
   
   (defmethod event-msg-handler :chsk/handshake
     [{:as ev-msg :keys [?data]}]
     (let [[?uid ?csrf-token ?handshake-data] ?data]
-      (debugf "Handshake: %s" ?data))))
+      (debugf "Handshake: %s" ?data)
+      (chsk-send! [:chsk/recv {:had-a-callback? "nope"}]))))
       
       ;; Add your (defmethod handle-event-msg! <event-id> [ev-msg] <body>)s here...
 (def router_ (atom nil))

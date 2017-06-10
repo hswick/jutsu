@@ -13,7 +13,7 @@
    [hiccup.page :refer [include-css]]))
 
 ;;;; Logging config
-;; (sente/set-logging-level! :trace) ; Uncomment for more logging
+;(sente/set-logging-level! :trace) ; Uncomment for more logging
 
 ;;;; Packer (client<->server serializtion format) config
 
@@ -63,19 +63,23 @@
 (defmulti event-msg-handler :id) ; Dispatch on event-id
    ;; Wrap for logging, catching, etc.:
 (defn event-msg-handler* [{:as ev-msg :keys [id ?data event]}]
-  ;(debugf "Event: %s" event)
+  (debugf "Event: %s" id)
   (event-msg-handler ev-msg))
 
 (do ; Server-side methods
-    (defmethod event-msg-handler :default ; Fallback
-      [{:as ev-msg :keys [event id ?data ring-req ?reply-fn send-fn]}]
-      (let [session (:session ring-req)
-            uid     (:uid     session)]
-        ;(debugf "Unhandled event: %s" event)
-        (when ?reply-fn
-          (?reply-fn {:umatched-event-as-echoed-from-from-server event})))))
-
-    ;; Add your (defmethod event-msg-handler <event-id> [ev-msg] <body>)s here...
+  
+  (defmethod event-msg-handler :default ; Fallback
+    [{:as ev-msg :keys [event id ?data ring-req ?reply-fn send-fn]}]
+    (let [session (:session ring-req)
+          uid     (:uid     session)]
+      (debugf "Unhandled event: %s" event)
+      ;(debugf "Unhandled id: " id)
+      (when ?reply-fn
+        (?reply-fn {:umatched-event-as-echoed-from-from-server event}))))
+  
+  (defmethod event-msg-handler :chsk/recv
+    [{:as ev-msg :keys [?data id]}]
+    (debugf "Push event from client: %s" ?data)))
 
 ; Note that this'll be fast+reliable even over Ajax!:
 (defn test-fast-server>user-pushes []
@@ -107,21 +111,20 @@
      (reset! web-server_ server-map)
      uri)))
 
-
 (defn display-uri! [uri]
   (try
     (.browse (java.awt.Desktop/getDesktop) (java.net.URI. uri))
     (catch java.awt.HeadlessException _))
   uri)
   
-
+;;Web socket router
 (defonce router_ (atom nil))
-
 (defn  stop-router! [] (when-let [stop-f @router_] (stop-f)))
 (defn start-router! []
   (stop-router!)
   (reset! router_ (sente/start-chsk-router! ch-chsk event-msg-handler*)))
 
+;;Default way to start up jutsu server
 (defn start! []
   (start-router!);;Have to call this to get websocket working
   (-> (jutsu-routes)

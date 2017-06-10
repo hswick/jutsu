@@ -8,6 +8,8 @@ Easy to use abstractions that compose and decompose with simplicity.
 
 Split or partial datasets are more important to programmers than the whole dataset
 
+This library is all about decomposable functionality with convenient defaults
+
 Datasets are maps where the keys are columns and the elements are rows
 -Currently the concept of dataset assumes that rows of all columns are equal
 -TODO: jutsu-dataset spec (is this a valid? jutsu-dataset?)
