@@ -78,7 +78,8 @@
   
   (defmethod event-msg-handler :chsk/recv
     [{:as ev-msg :keys [?data id]}]
-    (debugf "Push event from client: %s" ?data)))
+    (debugf "Push event from client: %s" ?data)
+    (event-handler ?data)))
 
 ; Note that this'll be fast+reliable even over Ajax!:
 (defn test-fast-server>user-pushes []
