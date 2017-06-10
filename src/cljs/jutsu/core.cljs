@@ -41,23 +41,24 @@
                              [:tr
                               (map (fn [item] [:td (str item)]) data-row)])]])))
                                   
+(defn jutsu-client-event-handler [?data]
+  (match (first ?data)
+    :graph/graph
+    (draw-plot! 
+      (:id (second ?data))
+      (:data (second ?data))
+      (:layout (second ?data)))
+    :graph/update
+    (extend-traces! 
+      (:id (second ?data))
+      (:data (second ?data)))
+    :dataset/dataset
+    (draw-dataset! (:data (second ?data)))
+    :else
+    (.log js/console (str "Unhandled event " ?data))))
 
-(web/init-client-side-events!
-  (fn
-    [?data]
-    (match (first ?data)
-      :graph/graph
-      (draw-plot! 
-        (:id (second ?data))
-        (:data (second ?data))
-        (:layout (second ?data)))
-      :graph/update
-      (extend-traces! 
-        (:id (second ?data))
-        (:data (second ?data)))
-      :dataset/dataset
-      (draw-dataset! (:data (second ?data)))
-      :else
-      (.log js/console (str "Unhandled event " ?data)))))
+(web/init-client-side-events! 
+  jutsu-client-event-handler 
+  (fn [] (web/chsk-send! [:chsk/recv {:had-a-callback? "nope"}])))
 
 (web/start!)

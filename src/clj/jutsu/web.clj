@@ -66,8 +66,7 @@
   (debugf "Event: %s" id)
   (event-msg-handler ev-msg))
 
-(do ; Server-side methods
-  
+(defn init-server-event-handler! [event-handler]
   (defmethod event-msg-handler :default ; Fallback
     [{:as ev-msg :keys [event id ?data ring-req ?reply-fn send-fn]}]
     (let [session (:session ring-req)
@@ -126,6 +125,7 @@
 
 ;;Default way to start up jutsu server
 (defn start! []
+  (init-server-event-handler! (fn [?data] (debugf (str ?data))))
   (start-router!);;Have to call this to get websocket working
   (-> (jutsu-routes)
       jutsu-ring-handler

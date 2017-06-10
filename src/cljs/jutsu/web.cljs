@@ -39,7 +39,7 @@
   (debugf "Event: %s" event)
   (event-msg-handler ev-msg))
 
-(defn init-client-side-events! [event-handler] ; Client-side methods
+(defn init-client-side-events! [event-handler on-init] ; Client-side methods
   (defmethod event-msg-handler :default ; Fallback
     [{:as ev-msg :keys [event]}]
     (debugf "Unhandled event: %s" event))
@@ -59,12 +59,13 @@
     [{:as ev-msg :keys [?data]}]
     (let [[?uid ?csrf-token ?handshake-data] ?data]
       (debugf "Handshake: %s" ?data)
-      (chsk-send! [:chsk/recv {:had-a-callback? "nope"}]))))
+      (on-init))))
+      
       
       ;; Add your (defmethod handle-event-msg! <event-id> [ev-msg] <body>)s here...
 (def router_ (atom nil))
 (defn  stop-router! [] (when-let [stop-f @router_] (stop-f)))
-(defn start-router! []
+(defn start-router! [event-handler]
   (stop-router!)
   (reset! router_ (sente/start-chsk-router! ch-chsk event-msg-handler*)))
 
