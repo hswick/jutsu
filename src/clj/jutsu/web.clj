@@ -1,17 +1,16 @@
 (ns jutsu.web
   (:require
-     [clojure.string     :as str]
-     [ring.middleware.defaults :refer [site-defaults]]
-     [compojure.core     :as comp :refer (defroutes GET POST)]
-     [compojure.route    :as route]
-     [hiccup.core        :as hiccup]
-     [clojure.core.async :as async  :refer (<! <!! >! >!! put! chan go go-loop)]
-     [taoensso.timbre    :as timbre :refer (tracef debugf infof warnf errorf)]
-     [taoensso.sente     :as sente]
-     [org.httpkit.server :as http-kit]
-     [taoensso.sente.server-adapters.http-kit :refer (sente-web-server-adapter)]
-     [taoensso.sente.packers.transit :as sente-transit]
-     [hiccup.page :refer [include-css]]))
+   [ring.middleware.defaults :refer [site-defaults]]
+   [compojure.core     :as comp :refer (defroutes GET POST)]
+   [compojure.route    :as route]
+   [hiccup.core        :as hiccup]
+   [clojure.core.async :as async  :refer (<! <!! >! >!! put! chan go go-loop)]
+   [taoensso.timbre    :as timbre :refer (tracef debugf infof warnf errorf)]
+   [taoensso.sente     :as sente]
+   [org.httpkit.server :as http-kit]
+   [taoensso.sente.server-adapters.http-kit :refer (sente-web-server-adapter)]
+   [taoensso.sente.packers.transit :as sente-transit]
+   [hiccup.page :refer [include-css]]))
 
 ;;;; Logging config
 ;; (sente/set-logging-level! :trace) ; Uncomment for more logging
@@ -105,10 +104,16 @@
                           (or port 0)) ; 0 => auto (any available) port                        
          uri (format "http://localhost:%s/" port)]
     ;(debugf "Web server is running at `%s`" uri)
-    (try
-      (.browse (java.awt.Desktop/getDesktop) (java.net.URI. uri))
-      (catch java.awt.HeadlessException _))
-    (reset! web-server_ server-map))))
+     (reset! web-server_ server-map)
+     uri)))
+
+
+(defn display-uri! [uri]
+  (try
+    (.browse (java.awt.Desktop/getDesktop) (java.net.URI. uri))
+    (catch java.awt.HeadlessException _))
+  uri)
+  
 
 (defonce router_ (atom nil))
 
@@ -121,4 +126,5 @@
   (start-router!);;Have to call this to get websocket working
   (-> (jutsu-routes)
       jutsu-ring-handler
-      start-web-server!))
+      start-web-server!
+      display-uri!))
