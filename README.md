@@ -4,11 +4,14 @@
 
 Data Science Framework built with clojure design principles in mind.
 
-Easy to use abstractions that are decomposable for simplicity.
+Easy to use abstractions that compose and decompose with simplicity.
+
+Split or partial datasets are more important to programmers than the whole dataset
 
 Datasets are maps where the keys are columns and the elements are rows
 -Currently the concept of dataset assumes that rows of all columns are equal
-
+-TODO: jutsu-dataset spec (is this a valid? jutsu-dataset?)
+-Valid jutsu spec is a map that is not empty, and contains at least one key value pair, if there is more than one key all values of those keys have to be same length.
 ## Usage
 
 ```clojure

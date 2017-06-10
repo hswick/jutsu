@@ -9,6 +9,8 @@
            [org.deeplearning4j.datasets.iterator ExistingDataSetIterator]
            [org.nd4j.linalg.api.ndarray INDArray]))
 
+;;Thinking about making this a multimethod or part of a protocol
+;;Should move this into a dif namespace like iterator
 (defn jutsu-nth [coll index]
   (if (instance? INDArray coll)
     (let [shape (.shape coll)]
@@ -19,12 +21,13 @@
 
 ;;Define schema and pipe values into different streams (columns)
 ;;Schema should be a vector of ranges or values
+;;
 (defn split-into-columns [rows schema]
   (into {} (map
              (fn [[column-name column-spec]]
                [column-name (if (seq? column-spec)
-                              (map (fn [row] (map #(nth row %) column-spec)) rows)
-                              (map #(nth % column-spec) rows))])
+                              (map (fn [row] (map #(jutsu-nth row %) column-spec)) rows)
+                              (map #(jutsu-nth % column-spec) rows))])
              (partition 2 schema))))
 
 ;;Split or partial datasets are more important to programmers than the whole dataset
@@ -33,6 +36,18 @@
   ([dataset column key-list]
    (let [indexed-elements (map-indexed (fn [id item] [item id]) (get dataset column))
          split-indexed (partition-by first indexed-elements)]
+     (map (fn [grouping]
+           (into {} (map (fn [k] (if (= column k)
+                                   [k (map first grouping)]
+                                   [k (map #(jutsu-nth (get dataset k) (second %)) grouping)]))
+                      key-list)))
+      split-indexed))))
+
+(defn sort-by-column
+  ([dataset column] (partition-by-column dataset column (keys dataset)))
+  ([dataset column key-list]
+   (let [indexed-elements (map-indexed (fn [id item] [item id]) (get dataset column))
+         split-indexed (sort-by first indexed-elements)]
      (map (fn [grouping]
            (into {} (map (fn [k] (if (= column k)
                                    [k (map first grouping)]

@@ -16,14 +16,6 @@
 ;;;; Logging config
 ;; (sente/set-logging-level! :trace) ; Uncomment for more logging
 
-;;; http-kit
-(defn start-web-server!* [ring-handler port]
-    (println "Starting http-kit...")
-    (let [http-kit-stop-fn (http-kit/run-server ring-handler {:port port})]
-      {:server  nil ; http-kit doesn't expose this
-       :port    (:local-port (meta http-kit-stop-fn))
-       :stop-fn (fn [] (http-kit-stop-fn :timeout 100))}))
-
 ;;;; Packer (client<->server serializtion format) config
 
 (def packer (sente-transit/get-flexi-packer :edn)) ; Experimental, needs Transit dep
@@ -39,7 +31,13 @@
   (def chsk-send!                    send-fn) ; ChannelSocket's send API fn
   (def connected-uids                connected-uids)) ; Watchable, read-only atom
 
+(def jutsu-socket-routes
+  (comp/routes
+        (GET  "/chsk"  req (ring-ajax-get-or-ws-handshake req));;need to decouple these from index
+        (POST "/chsk"  req (ring-ajax-post                req))
+        (route/not-found "<h1>Page not found</h1>")))
 
+;;Default index page for jutsu
 (defn index-page-handler [req]
   (hiccup/html
     (include-css "//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css")    
@@ -47,18 +45,19 @@
      [:style "body {text-align: center; background-color: #ebd5f2;}"]]
     [:script {:src "main.js"}]))
 
-(defroutes my-routes
-  (GET  "/"      req (index-page-handler req))
-  (GET  "/chsk"  req (ring-ajax-get-or-ws-handshake req))
-  (POST "/chsk"  req (ring-ajax-post                req))
-  (route/not-found "<h1>Page not found</h1>"))
+;;Order matters in how you compose routes
+(defn jutsu-routes
+  ([] (jutsu-routes (GET  "/"      req (index-page-handler req))))
+  ([index-route] (comp/routes index-route jutsu-socket-routes)))
+      
+      ;;should add this as an option)))
 
-(def my-ring-handler
+(defn jutsu-ring-handler [jutsu-routes]
   (let [ring-defaults-config
         (-> site-defaults
             (assoc-in [:static :resources] "/")
             (assoc-in [:security :anti-forgery] {:read-token (fn [req] (-> req :params :csrf-token))}))]
-    (ring.middleware.defaults/wrap-defaults my-routes ring-defaults-config)))
+    (ring.middleware.defaults/wrap-defaults jutsu-routes ring-defaults-config)))
 
 ;;;; Routing handlers
 
@@ -87,20 +86,29 @@
 
 ;;;; Init
 
+;;; http-kit
+(defn jutsu-server-map [ring-handler port]
+    (println "Starting http-kit...")
+    (let [http-kit-stop-fn (http-kit/run-server ring-handler {:port port})]
+      {:server  nil ; http-kit doesn't expose this
+       :port    (:local-port (meta http-kit-stop-fn))
+       :stop-fn (fn [] (http-kit-stop-fn :timeout 100))}))
+
 (defonce web-server_ (atom nil)) ; {:server _ :port _ :stop-fn (fn [])}
 (defn stop-web-server! [] (when-let [m @web-server_] ((:stop-fn m))))
-(defn start-web-server! [& [port]]
-  (stop-web-server!)
-  (let [{:keys [stop-fn port] :as server-map}
-        (start-web-server!* (var my-ring-handler)
-                            (or port 0)) ; 0 => auto (any available) port
-                            
-        uri (format "http://localhost:%s/" port)]
+
+(defn start-web-server!
+  ([& [ring-handler port]]
+   (stop-web-server!)
+   (let [{:keys [stop-fn port] :as server-map}
+         (jutsu-server-map ring-handler
+                          (or port 0)) ; 0 => auto (any available) port                        
+         uri (format "http://localhost:%s/" port)]
     ;(debugf "Web server is running at `%s`" uri)
     (try
       (.browse (java.awt.Desktop/getDesktop) (java.net.URI. uri))
       (catch java.awt.HeadlessException _))
-    (reset! web-server_ server-map)))
+    (reset! web-server_ server-map))))
 
 (defonce router_ (atom nil))
 
@@ -110,5 +118,7 @@
   (reset! router_ (sente/start-chsk-router! ch-chsk event-msg-handler*)))
 
 (defn start! []
-  (start-router!)
-  (start-web-server!))
+  (start-router!);;Have to call this to get websocket working
+  (-> (jutsu-routes)
+      jutsu-ring-handler
+      start-web-server!))
