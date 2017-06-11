@@ -1,6 +1,5 @@
 (ns jutsu.core
-  (:require [jutsu.web :as web]
-            [jutsu.data :refer :all]))
+  (:require [jutsu.web :as web]))
 
 ;;Initializes the jutsu server
 ;;Initializes the jutsu server router for sente
@@ -45,74 +44,3 @@
                            :mode "markers"
                            :type "scatter"}
                           split-dataset))))
-
-(defn test-graph-2 [name]
-  (graph! name
-    [{:x [1 2 3 4]
-      :y [1 2 3 4]
-      :mode "markers"
-      :type "scatter"}]))
-
-(defn test-update-graph! []
-  (update-graph!  
-    "foo"
-    {:data {:y [[4]] :x [[5]]} 
-     :traces [0]}))
-
-(defn test-covar []
-   (let [data (->> (csv->clj "iris.csv")
-                  rest
-                  (map #(take 4 %))
-                  (map strings->floats)
-                  clj->nd4j
-                  ((fn [ndarray] (pca ndarray 2))))]
-     data))
-
-(defn test-iris! []
-  (let [dataset (-> (csv->clj "iris.csv")
-                    ((fn [data]
-                       {:coords (->> data
-                                     rest
-                                     (map #(take 4 %))
-                                     (map strings->floats)
-                                     clj->nd4j
-                                     normalize-zero
-                                     (pca 2))
-                        :labels (map #(nth % 4) data)})))
-        split-labels-and-ids (->> (:labels dataset)
-                                  (map-indexed (fn [id label] [label id]))
-                                  (partition-by first)
-                                  rest)
-        graph-data (map
-                    (fn [species-with-ids]
-                      {:x (map (fn [[label id]]  
-                                 (get-double-from-row (:coords dataset) (dec id) 0)) 
-                            species-with-ids)
-                       :y (map (fn [[label id]] 
-                                 (get-double-from-row (:coords dataset) (dec id) 1)) 
-                            species-with-ids)
-                       ;:text (map first species-with-ids)
-                       :name (ffirst species-with-ids)
-                       :mode "markers"
-                       :type "scatter"})
-                    split-labels-and-ids)]
-    (graph! "test-iris" graph-data)))
-
-(defn test-split []
-  (let [label-index 4]
-    (split-into-columns (csv->clj "iris.csv" false) 
-      [:data (range 0 4) :labels 4])))
-
-(defn test-iris-3 []
-  (-> (csv->clj "iris.csv" false)
-      (split-into-columns [:data (range 0 4) :labels 4])
-      (update :data #(->> (map strings->floats %)
-                          clj->nd4j
-                          normalize-zero
-                          (pca 2)))
-      (partition-by-column :labels)
-      (scatter-graph!)))
-
-(defn test-etl []
-  (csv->nd4j-array "iris.csv" 4 true))
- 

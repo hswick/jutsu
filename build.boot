@@ -17,12 +17,7 @@
                   [com.cognitect/transit-cljs "0.8.220"]
                   [hiccups "0.3.0"]
                   [cljsjs/plotly "1.25.0-0"]
-                  [org.clojure/core.match "0.3.0-alpha4"]
-                  [org.datavec/datavec-api "0.8.0"]
-                  [org.deeplearning4j/deeplearning4j-core "0.8.0"]
-                  [org.nd4j/nd4j-native "0.8.0"]
-                  [org.nd4j/nd4j-api "0.8.0"]
-                  [cheshire "5.7.1"]])              
+                  [org.clojure/core.match "0.3.0-alpha4"]])              
 
 (require
  '[adzerk.boot-cljs      :refer [cljs]]
@@ -63,8 +58,7 @@
 (deftask test-jutsu
   []
   (comp
+    (watch)
     (cljs :source-map true)
-    (repl 
-      :init-ns 'jutsu.test
-      :eval '(run-tests))))
+    (test)))
    

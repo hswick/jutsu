@@ -35,6 +35,7 @@
   (.log js/console data)
   (append-to-body! (html [:div.container
                           {:style "overflow: scroll; height: 25%;"}
+                          [:h1 "data"]                          
                           [:table.table-striped
                            {:style "width: 100%;"}
                            (for [data-row data]
