@@ -1,6 +1,7 @@
 (ns jutsu.test
   (:require [jutsu.core :as j]
-            [jutsu.web :as w]))
+            [jutsu.web :as w]
+            [clojure.core.match :refer [match]]))
 
 (defn test-graph! []
   (j/graph! (str "graph-" @j/graph-count)
@@ -38,3 +39,11 @@
   (w/test-fast-server>user-pushes))
 
 (run-tests)
+
+(Thread/sleep 3000)
+
+(w/start! (fn [?data]
+            (match (first (second ?data))
+              :init (println "CLJS has been initialized")
+              :else (println "Unhandled event"))))
+

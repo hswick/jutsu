@@ -127,12 +127,13 @@
 ;;Could potentially put all of these calls in a map to make it more assemblage like
 ;;Swap out keys of map to replace a part
 ;;Default way to start up jutsu server
+;;Need to make optional input map
 (defn start!
   ([] (start! (fn [?data])))
-  ([init-fn]
-   (init-server-event-handler! init-fn)
+  ([event-handler]
+   (init-server-event-handler! event-handler)
    (start-router!);;Have to call this to get websocket working
    (-> (jutsu-routes)
        jutsu-ring-handler
-       start-web-server!
+       (start-web-server!)
        display-uri!)))
