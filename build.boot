@@ -42,7 +42,7 @@
   []
   (comp
    (watch)
-   (cljs :source-map true)
+   (cljs)
    (reload)
    (refresh)
    (repl
@@ -59,6 +59,6 @@
   []
   (comp
     (watch)
-    (cljs :source-map true)
+    (cljs)
     (test)))
    
