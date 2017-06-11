@@ -14,6 +14,8 @@ Datasets are maps where the keys are columns and the elements are rows
 -Currently the concept of dataset assumes that rows of all columns are equal
 -TODO: jutsu-dataset spec (is this a valid? jutsu-dataset?)
 -Valid jutsu spec is a map that is not empty, and contains at least one key value pair, if there is more than one key all values of those keys have to be same length.
+
+Need to give slight delay before sending events to server
 ## Usage
 
 ```clojure

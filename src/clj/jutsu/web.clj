@@ -63,7 +63,7 @@
 (defmulti event-msg-handler :id) ; Dispatch on event-id
    ;; Wrap for logging, catching, etc.:
 (defn event-msg-handler* [{:as ev-msg :keys [id ?data event]}]
-  (debugf "Event: %s" id)
+  ;(debugf "Event: %s" id)
   (event-msg-handler ev-msg))
 
 (defn init-server-event-handler! [event-handler]
@@ -78,7 +78,7 @@
   
   (defmethod event-msg-handler :chsk/recv
     [{:as ev-msg :keys [?data id]}]
-    (debugf "Push event from client: %s" ?data)
+    ;(debugf "Push event from client: %s" ?data)
     (event-handler ?data)))
 
 ; Note that this'll be fast+reliable even over Ajax!:
@@ -124,6 +124,8 @@
   (stop-router!)
   (reset! router_ (sente/start-chsk-router! ch-chsk event-msg-handler*)))
 
+;;Could potentially put all of these calls in a map to make it more assemblage like
+;;Swap out keys of map to replace a part
 ;;Default way to start up jutsu server
 (defn start!
   ([] (start! (fn [?data])))

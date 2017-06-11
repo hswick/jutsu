@@ -1,10 +1,11 @@
 (set-env!
   :source-paths   #{"src/clj" "src/cljs"}
-  :resource-paths #{"resources"}
+  :resource-paths #{"resources" "test"}
   :dependencies '[[adzerk/boot-cljs      "2.0.0" :scope "test"]
                   [adzerk/boot-reload    "0.5.1"      :scope "test"]
                   [nightlight "1.6.5" :scope "test"]
                   [samestep/boot-refresh "0.1.0" :scope "test"]
+                  [adzerk/boot-test "1.2.0" :scope "test"] 
                   [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                   [com.taoensso/sente        "1.5.0-RC2"] ; <--- Sente
                   [http-kit                  "2.1.19"]
@@ -21,13 +22,14 @@
                   [org.deeplearning4j/deeplearning4j-core "0.8.0"]
                   [org.nd4j/nd4j-native "0.8.0"]
                   [org.nd4j/nd4j-api "0.8.0"]
-                  [cheshire "5.7.1"]])                  
+                  [cheshire "5.7.1"]])              
 
 (require
  '[adzerk.boot-cljs      :refer [cljs]]
  '[adzerk.boot-reload    :refer [reload]]
  '[nightlight.boot :refer [nightlight]]
- '[samestep.boot-refresh :refer [refresh]])
+ '[samestep.boot-refresh :refer [refresh]]
+ '[adzerk.boot-test :refer :all])
 
 (try
  (require 'jutsu.core)
@@ -57,4 +59,12 @@
  (comp
   (repl 
     :client true)))
+
+(deftask test-jutsu
+  []
+  (comp
+    (cljs :source-map true)
+    (repl 
+      :init-ns 'jutsu.test
+      :eval '(run-tests))))
    

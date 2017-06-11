@@ -46,21 +46,12 @@
                            :type "scatter"}
                           split-dataset))))
 
-(defn test-graph []
-  (graph! (str "graph-" @graph-count)
-    [{:x [1 2 3 4]
-      :y [1 2 3 4]
-      :mode "markers"
-      :type "scatter"}]))
-
 (defn test-graph-2 [name]
   (graph! name
     [{:x [1 2 3 4]
       :y [1 2 3 4]
       :mode "markers"
       :type "scatter"}]))
-
-
 
 (defn test-update-graph! []
   (update-graph!  

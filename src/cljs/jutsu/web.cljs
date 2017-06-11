@@ -65,7 +65,7 @@
       ;; Add your (defmethod handle-event-msg! <event-id> [ev-msg] <body>)s here...
 (def router_ (atom nil))
 (defn  stop-router! [] (when-let [stop-f @router_] (stop-f)))
-(defn start-router! [event-handler]
+(defn start-router! []
   (stop-router!)
   (reset! router_ (sente/start-chsk-router! ch-chsk event-msg-handler*)))
 
