@@ -58,8 +58,11 @@
     :else
     (.log js/console (str "Unhandled event " ?data))))
 
-(web/init-client-side-events! 
-  jutsu-client-event-handler 
-  (fn [] (web/chsk-send! [:chsk/recv {:had-a-callback? "nope"}])))
 
-(web/start!)
+
+(defn initialize-client-events [callback]
+  (web/init-client-side-events! 
+    jutsu-client-event-handler))
+  
+(defn jutsu-start []
+  (web/start!))

@@ -30,8 +30,6 @@
                [1 2 3 4]]))
 
 (defn run-tests []
-  (w/start!)
-  (Thread/sleep 3000)
   (test-graph!)
   (test-graph-2! "foo")
   (test-update-graph!)
@@ -40,10 +38,10 @@
 
 (run-tests)
 
-(Thread/sleep 3000)
+;(Thread/sleep 3000)
 
-(w/start! (fn [?data]
-            (match (first (second ?data))
-              :init (println "CLJS has been initialized")
-              :else (println "Unhandled event"))))
+;(w/start! (fn [?data]
+;            (match (first (second ?data))
+;  :init (println "CLJS has been initialized")
+;  :else (println "Unhandled event"))
 

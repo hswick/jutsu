@@ -111,10 +111,11 @@
      (reset! web-server_ server-map)
      uri)))
 
-(defn display-uri! [uri]
-  (try
-    (.browse (java.awt.Desktop/getDesktop) (java.net.URI. uri))
-    (catch java.awt.HeadlessException _))
+(defn display-uri! [uri display]
+  (when display
+    (try
+      (.browse (java.awt.Desktop/getDesktop) (java.net.URI. uri))
+      (catch java.awt.HeadlessException _)))
   uri)
   
 ;;Web socket router
@@ -130,10 +131,20 @@
 ;;Need to make optional input map
 (defn start!
   ([] (start! (fn [?data])))
-  ([event-handler]
+  ([event-handler display]
    (init-server-event-handler! event-handler)
    (start-router!);;Have to call this to get websocket working
    (-> (jutsu-routes)
        jutsu-ring-handler
        (start-web-server!)
-       display-uri!)))
+       ((fn [uri]
+         (when display
+          display-uri!))))))
+
+(defn start2 [display]
+  (init-server-event-handler! (fn [?data]))
+  (start-router!)
+  (-> (jutsu-routes)
+      jutsu-ring-handler
+      (start-web-server!)
+      (display-uri! display)))

@@ -1,6 +1,6 @@
 (set-env!
   :source-paths   #{"src/clj" "src/cljs"}
-  :resource-paths #{"resources" "test"}
+  :resource-paths #{"resources"}
   :dependencies '[[adzerk/boot-cljs      "2.0.0" :scope "test"]
                   [adzerk/boot-reload    "0.5.1"      :scope "test"]
                   [nightlight "1.6.5" :scope "test"]
@@ -17,18 +17,23 @@
                   [com.cognitect/transit-cljs "0.8.220"]
                   [hiccups "0.3.0"]
                   [cljsjs/plotly "1.25.0-0"]
-                  [org.clojure/core.match "0.3.0-alpha4"]])              
+                  [org.clojure/core.match "0.3.0-alpha4"]
+                  [crisptrutski/boot-cljs-test "0.3.1" :scope "test"]])
 
 (require
  '[adzerk.boot-cljs      :refer [cljs]]
  '[adzerk.boot-reload    :refer [reload]]
  '[nightlight.boot :refer [nightlight]]
  '[samestep.boot-refresh :refer [refresh]]
- '[adzerk.boot-test :refer :all])
+ '[adzerk.boot-test :refer :all]
+ '[crisptrutski.boot-cljs-test :refer [test-cljs]]
+ 'jutsu.web)
 
 (try
  (require 'jutsu.core)
  (catch Exception e (.getMessage e)))
+
+(deftask testing [] (merge-env! :source-paths #{"test"}) identity)
 
 (deftask night 
  "Start nightlight editor on localhost:4000"
@@ -54,6 +59,11 @@
  (comp
   (repl 
     :client true)))
+
+(deftask start-server
+  []
+  (wait)
+  (jutsu.web/start2 false))
 
 (deftask test-jutsu
   []
