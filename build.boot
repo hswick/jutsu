@@ -1,6 +1,5 @@
 (set-env!
   :source-paths   #{"src/clj" "src/cljs"}
-  :resource-paths #{"resources"}
   :dependencies '[[adzerk/boot-cljs      "2.0.0" :scope "test"]
                   [adzerk/boot-reload    "0.5.1"      :scope "test"]
                   [nightlight "1.6.5" :scope "test"]
@@ -18,7 +17,9 @@
                   [hiccups "0.3.0"]
                   [cljsjs/plotly "1.25.0-0"]
                   [org.clojure/core.match "0.3.0-alpha4"]
-                  [crisptrutski/boot-cljs-test "0.3.1" :scope "test"]])
+                  [crisptrutski/boot-cljs-test "0.3.1" :scope "test"]
+                  [adzerk/bootlaces "0.1.13" :scope "test"]])
+
 
 (require
  '[adzerk.boot-cljs      :refer [cljs]]
@@ -27,7 +28,11 @@
  '[samestep.boot-refresh :refer [refresh]]
  '[adzerk.boot-test :refer :all]
  '[crisptrutski.boot-cljs-test :refer [test-cljs]]
- 'jutsu.web)
+ 'jutsu.web
+ '[adzerk.bootlaces :refer :all])
+
+(def +version+ "0.0.1")
+(bootlaces! +version+ :dont-modify-p)
 
 (try
  (require 'jutsu.core)

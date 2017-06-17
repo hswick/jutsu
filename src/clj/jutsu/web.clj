@@ -138,8 +138,7 @@
        jutsu-ring-handler
        (start-web-server!)
        ((fn [uri]
-         (when display
-          display-uri!))))))
+         (when display display-uri!))))))
 
 (defn start2 [display]
   (init-server-event-handler! (fn [?data]))
