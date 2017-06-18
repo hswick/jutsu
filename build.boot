@@ -31,8 +31,16 @@
  'jutsu.web
  '[adzerk.bootlaces :refer :all])
 
-(def +version+ "0.0.1")
-(bootlaces! +version+ :dont-modify-p)
+(def +version+ "0.0.1-SNAPSHOT")
+(bootlaces! +version+ :dont-modify-paths? true)
+
+(task-options!
+  aot {:namespace '#{jutsu.core}}
+  jar {:main 'jutsu.core
+       :file "jutsu.jar"
+       :manifest {"Description" "Data visualization tool"}}
+  pom {:version +version+
+       :project 'hswick/jutsu})
 
 (try
  (require 'jutsu.core)

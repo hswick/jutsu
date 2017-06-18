@@ -1,12 +1,12 @@
 (ns jutsu.core
- (:require
-   [clojure.string  :as string]
-   [hiccups.runtime :as hiccupsrt]
-   [cljsjs.plotly]
-   [jutsu.web :as web]
-   [cljs.core.match :refer-macros [match]])
- (:require-macros
-   [hiccups.core :as hiccups :refer [html]]))
+  (:require
+            [clojure.string  :as string]
+            [hiccups.runtime :as hiccupsrt]
+            [cljsjs.plotly]
+            [jutsu.web :as web]
+            [cljs.core.match :refer-macros [match]])
+  (:require-macros
+                   [hiccups.core :as hiccups :refer [html]]))
 
 (defn append-to-body! [el]
   (.insertAdjacentHTML (.-body js/document) "beforeEnd" el))
