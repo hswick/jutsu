@@ -58,11 +58,12 @@
     :else
     (.log js/console (str "Unhandled event " ?data))))
 
-
-
-(defn initialize-client-events [callback]
+(defn initialize-client-events []
   (web/init-client-side-events! 
     jutsu-client-event-handler))
   
 (defn jutsu-start []
+  (initialize-client-events)
   (web/start!))
+
+(jutsu-start)

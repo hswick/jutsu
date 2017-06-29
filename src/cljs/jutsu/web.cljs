@@ -39,7 +39,7 @@
   (debugf "Event: %s" event)
   (event-msg-handler ev-msg))
 
-(defn init-client-side-events! [event-handler on-init] ; Client-side methods
+(defn init-client-side-events! [event-handler] ; Client-side methods
   (defmethod event-msg-handler :default ; Fallback
     [{:as ev-msg :keys [event]}]
     (debugf "Unhandled event: %s" event))
@@ -58,8 +58,7 @@
   (defmethod event-msg-handler :chsk/handshake
     [{:as ev-msg :keys [?data]}]
     (let [[?uid ?csrf-token ?handshake-data] ?data]
-      (debugf "Handshake: %s" ?data)
-      (on-init))))
+      (debugf "Handshake: %s" ?data))))
       
       
       ;; Add your (defmethod handle-event-msg! <event-id> [ev-msg] <body>)s here...

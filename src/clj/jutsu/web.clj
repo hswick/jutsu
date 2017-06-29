@@ -32,24 +32,29 @@
 
 (def jutsu-socket-routes
   (comp/routes
-        (GET  "/chsk"  req (ring-ajax-get-or-ws-handshake req));;need to decouple these from index
+        (GET  "/chsk"  req (ring-ajax-get-or-ws-handshake req))
         (POST "/chsk"  req (ring-ajax-post                req))
         (route/not-found "<h1>Page not found</h1>")))
 
-;;Default index page for jutsu
-(defn index-page-handler [req]
-  (hiccup/html
+(defn index-page
+  ([] (index-page "#ebd5f2"))
+  ([background-color]
+   (hiccup/html
     (include-css "//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css")    
     [:h1.jutsu-header "jutsu 術"
-     [:style "body {text-align: center; background-color: #ebd5f2;}"]]
-    [:script {:src "main.js"}]))
+     [:style (str "body {text-align: center; background-color:" background-color ";}")]]
+    [:script {:src "main.js"}])))
+
+(defn index-page-handler-factory [color]
+  (fn [req] (index-page color)))
+
+(defn index-route-factory
+  ([color]
+   (GET "/" req ((index-page-handler-factory color) req))))
 
 ;;Order matters in how you compose routes
 (defn jutsu-routes
-  ([] (jutsu-routes (GET  "/"      req (index-page-handler req))))
   ([index-route] (comp/routes index-route jutsu-socket-routes)))
-      
-      ;;should add this as an option)))
 
 (defn jutsu-ring-handler [jutsu-routes]
   (let [ring-defaults-config
@@ -129,21 +134,16 @@
 ;;Swap out keys of map to replace a part
 ;;Default way to start up jutsu server
 ;;Need to make optional input map
-(defn start!
-  ([] (start! (fn [?data])))
-  ([event-handler display]
-   (init-server-event-handler! event-handler)
-   (start-router!);;Have to call this to get websocket working
-   (-> (jutsu-routes)
-       jutsu-ring-handler
-       (start-web-server!)
-       ((fn [uri]
-         (when display display-uri!))))))
 
-(defn start2 [display]
-  (init-server-event-handler! (fn [?data]))
-  (start-router!)
-  (-> (jutsu-routes)
-      jutsu-ring-handler
-      (start-web-server!)
-      (display-uri! display)))
+(defn start! 
+  ([display] (start! display "white"))
+  ([display color]
+   (init-server-event-handler! (fn [?data]))
+   (start-router!)
+   (-> (index-route-factory color);;Should use a when statement
+       jutsu-routes
+       jutsu-ring-handler
+       start-web-server!
+       (display-uri! display))))
+
+
