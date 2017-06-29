@@ -29,7 +29,7 @@
                [1 2 3 4]
                [1 2 3 4]]))
 
-(j/start-server! true "white")
+(j/start-server!)
 (Thread/sleep 3000)
 (w/test-fast-server>user-pushes)
 

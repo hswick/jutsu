@@ -45,20 +45,15 @@
      [:style (str "body {text-align: center; background-color:" background-color ";}")]]
     [:script {:src "main.js"}])))
 
-;;Default index page for jutsu
-(defn default-index-page-handler [req] (index-page))
-
 (defn index-page-handler-factory [color]
   (fn [req] (index-page color)))
 
-(defn index-route-factory 
-  ([] (GET "/" req (default-index-page-handler req)))
+(defn index-route-factory
   ([color]
    (GET "/" req ((index-page-handler-factory color) req))))
 
 ;;Order matters in how you compose routes
 (defn jutsu-routes
-  ([] (jutsu-routes (GET "/" req (default-index-page-handler req))))
   ([index-route] (comp/routes index-route jutsu-socket-routes)))
 
 (defn jutsu-ring-handler [jutsu-routes]
@@ -141,13 +136,7 @@
 ;;Need to make optional input map
 
 (defn start! 
-  ([display]
-   (init-server-event-handler! (fn [?data]));;May need server to receive events at some point
-   (start-router!)
-   (-> (jutsu-routes)
-       jutsu-ring-handler
-       (start-web-server!)
-       (display-uri! display)))
+  ([display] (start! display "white"))
   ([display color]
    (init-server-event-handler! (fn [?data]))
    (start-router!)
