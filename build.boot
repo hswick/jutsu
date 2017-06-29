@@ -1,6 +1,8 @@
 (set-env!
-  :resource-paths   #{"src/clj" "src/cljs"}
-  :dependencies '[[adzerk/boot-cljs      "2.0.0" :scope "test"]
+  :resource-paths #{"src/clj" "src/cljs"}
+  :dependencies '[[org.clojure/clojure "1.8.0"]
+                  [org.clojure/clojurescript "1.9.518" :scope "test"]
+                  [adzerk/boot-cljs      "2.0.0" :scope "test"]
                   [adzerk/boot-reload    "0.5.1"      :scope "test"]
                   [nightlight "1.6.5" :scope "test"]
                   [samestep/boot-refresh "0.1.0" :scope "test"]
@@ -18,7 +20,6 @@
                   [cljsjs/plotly "1.25.0-0"]
                   [org.clojure/core.match "0.3.0-alpha4"]
                   [adzerk/bootlaces "0.1.13" :scope "test"]])
-
 
 (require
  '[adzerk.boot-cljs      :refer [cljs]]
@@ -43,6 +44,13 @@
 (try
  (require 'jutsu.core)
  (catch Exception e (.getMessage e)))
+
+(deftask deploy []
+  (comp
+    (cljs :optimizations :advanced)
+    (pom)
+    (jar)
+    (push :repo "clojars")))
 
 (deftask testing [] (merge-env! :source-paths #{"test"}) identity)
 
