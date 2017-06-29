@@ -5,7 +5,7 @@
 ;;Initializes the jutsu server router for sente
 ;;opens client in browser
 ;;TODO: options map for server (turn off auto open client)
-(defn start-server! [] (web/start!))
+(defn start-server! [] (web/start2 true))
 
 (def graph-count (atom 0))
 

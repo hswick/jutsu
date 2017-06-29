@@ -29,6 +29,10 @@
                [1 2 3 4]
                [1 2 3 4]]))
 
+(j/start-server!)
+(Thread/sleep 3000)
+(w/test-fast-server>user-pushes)
+
 (defn run-tests []
   (test-graph!)
   (test-graph-2! "foo")
@@ -38,7 +42,7 @@
 
 (run-tests)
 
-;(Thread/sleep 3000)
+
 
 ;(w/start! (fn [?data]
 ;            (match (first (second ?data))
