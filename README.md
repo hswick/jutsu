@@ -15,14 +15,17 @@ Datasets are maps where the keys are columns and the elements are rows
 -TODO: jutsu-dataset spec (is this a valid? jutsu-dataset?)
 -Valid jutsu spec is a map that is not empty, and contains at least one key value pair, if there is more than one key all values of those keys have to be same length.
 
-Need to give slight delay before sending events to server
 ## Usage
 
 ```clojure
 (:require [jutsu.core :as jutsu])
 
 ;;Start Jutsu server and opens client in browser
-(jutsu/start-server!)
+(jutsu/start-jutsu!)
+
+;;If you are running this in a script as opposed to the repl 
+;;delay for a bit to let the websocket connect.
+;;(Thread/sleep 3000)
 
 ;;Adds a graph to the Jutsu client
 (jutsu/graph!
@@ -61,7 +64,9 @@ Run all three commands in separate tabs for optimal dev experience.
 
 `boot dev` to run
 
-`boot repl-client` to connect to repl server started with `boot dev`.
+`boot repl-client` to connect to repl server started with `boot dev`
+
+`boot test-jutsu` to run tests (will reload on file changes)
 
 
 ## More

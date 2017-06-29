@@ -17,7 +17,6 @@
                   [hiccups "0.3.0"]
                   [cljsjs/plotly "1.25.0-0"]
                   [org.clojure/core.match "0.3.0-alpha4"]
-                  [crisptrutski/boot-cljs-test "0.3.1" :scope "test"]
                   [adzerk/bootlaces "0.1.13" :scope "test"]])
 
 
@@ -27,11 +26,10 @@
  '[nightlight.boot :refer [nightlight]]
  '[samestep.boot-refresh :refer [refresh]]
  '[adzerk.boot-test :refer :all]
- '[crisptrutski.boot-cljs-test :refer [test-cljs]]
  'jutsu.web
  '[adzerk.bootlaces :refer :all])
 
-(def +version+ "0.0.1-SNAPSHOT")
+(def +version+ "0.0.1")
 (bootlaces! +version+ :dont-modify-paths? true)
 
 (task-options!
@@ -80,4 +78,3 @@
     (watch)
     (cljs)
     (test)))
-   

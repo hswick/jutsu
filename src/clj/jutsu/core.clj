@@ -4,11 +4,9 @@
 ;;Initializes the jutsu server
 ;;Initializes the jutsu server router for sente
 ;;opens client in browser
-;;TODO: options map for server (turn off auto open client)
-(defn start-server! 
-  ([] (web/start! true))
-  ([display] (web/start! display))
-  ([display color] (web/start! display color)))
+(defn start-jutsu! 
+  ([] (web/start!))
+  ([color] (web/start! color)))
 
 (def graph-count (atom 0))
 
@@ -36,16 +34,3 @@
 (defn dataset! [data]
   (doseq [uid (:any @web/connected-uids)]
     (web/chsk-send! uid [:dataset/dataset {:data data}])))
-
-;;Assumes you have a map with a key called :data
-(defn scatter-graph! [split-dataset]
-  (graph! "test-iris" (map
-                        (fn [dataset]
-                          {:x (map #(jutsu-nth % 0) (:data dataset))
-                           :y (map #(jutsu-nth % 1) (:data dataset)) 
-                           :name (first (:labels dataset))
-                           :mode "markers"
-                           :type "scatter"}
-                          split-dataset))))
-
-

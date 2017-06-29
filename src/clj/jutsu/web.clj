@@ -116,11 +116,10 @@
      (reset! web-server_ server-map)
      uri)))
 
-(defn display-uri! [uri display]
-  (when display
-    (try
-      (.browse (java.awt.Desktop/getDesktop) (java.net.URI. uri))
-      (catch java.awt.HeadlessException _)))
+(defn display-uri! [uri]
+  (try
+    (.browse (java.awt.Desktop/getDesktop) (java.net.URI. uri))
+    (catch java.awt.HeadlessException _))
   uri)
   
 ;;Web socket router
@@ -130,20 +129,13 @@
   (stop-router!)
   (reset! router_ (sente/start-chsk-router! ch-chsk event-msg-handler*)))
 
-;;Could potentially put all of these calls in a map to make it more assemblage like
-;;Swap out keys of map to replace a part
-;;Default way to start up jutsu server
-;;Need to make optional input map
-
-(defn start! 
-  ([display] (start! display "white"))
-  ([display color]
+(defn start!
+  ([] (start! "white"))
+  ([color]
    (init-server-event-handler! (fn [?data]))
    (start-router!)
-   (-> (index-route-factory color);;Should use a when statement
+   (-> (index-route-factory color)
        jutsu-routes
        jutsu-ring-handler
        start-web-server!
-       (display-uri! display))))
-
-
+       display-uri!)))
