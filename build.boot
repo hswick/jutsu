@@ -1,5 +1,4 @@
 (set-env!
-  :source-paths #{"test"}
   :resource-paths   #{"src/clj" "src/cljs"}
   :dependencies '[[adzerk/boot-cljs      "2.0.0" :scope "test"]
                   [adzerk/boot-reload    "0.5.1"      :scope "test"]
@@ -81,6 +80,7 @@
 
 (deftask test-jutsu
   []
+  (set-env! :source-paths #{"test"})
   (comp
     (watch)
     (cljs)
