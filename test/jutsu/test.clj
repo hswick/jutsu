@@ -29,7 +29,7 @@
                [1 2 3 4]
                [1 2 3 4]]))
 
-(j/start-server!)
+(j/start-server! true "white")
 (Thread/sleep 3000)
 (w/test-fast-server>user-pushes)
 
@@ -41,11 +41,3 @@
   (w/test-fast-server>user-pushes))
 
 (run-tests)
-
-
-
-;(w/start! (fn [?data]
-;            (match (first (second ?data))
-;  :init (println "CLJS has been initialized")
-;  :else (println "Unhandled event"))
-

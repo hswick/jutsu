@@ -73,11 +73,6 @@
   (repl 
     :client true)))
 
-(deftask start-server
-  []
-  (wait)
-  (jutsu.web/start2 false))
-
 (deftask test-jutsu
   []
   (set-env! :source-paths #{"test"})
