@@ -6,8 +6,6 @@
 
 jutsu translation: technique, way
 
-Data visualization tool built with the web and interactivity in mind.
-
 Do you want fast data visualization that looks professional without a lot of hassle? Then you have come to the right place!
 
 This tool is meant for purposes of all things data viz! The current api is functionally a light wrapper around [plotly.js](https://plot.ly/javascript/).
@@ -22,11 +20,29 @@ This functionally decouples the visualizations from the computations. Making the
 
 Future release will support cloud functionality which will be very few api changes.
 
+## Getting Started
+
+If you are new to clojure then follow these instructions, otherwise skip to usage.
+
+Make sure you have java installed
+
+`java -version` if you don't, then install a java SDK such as OpenJDK. 
+
+Then install [boot](https://github.com/boot-clj/boot).
+Boot is a build tool for clojure which allows you to run tasks from the command line.
+
+To make sure everything is working run `boot repl` in your command line.
+
+In order to use jutsu you will need to create a build.boot file to add jutsu as a dependency. 
+You can follow the instructions on boot's [homepage](https://github.com/boot-clj/boot) to get started.
+
 ## Usage
 
 Add jutsu to your dependencies
 
-`[hswick/jutsu "0.0.1"]`
+```clojure
+[hswick/jutsu "0.0.1"]
+```
 
 Then include jutsu into your current namespace.
 
