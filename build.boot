@@ -85,8 +85,8 @@
 
 (deftask test-jutsu
   []
-  (set-env! :source-paths #{"test"})
   (comp
+    (testing)
     (watch)
     (cljs)
     (test)))
