@@ -2,7 +2,7 @@
 
 # Jutsu 術
 
-![alt text](https://s-media-cache-ak0.pinimg.com/originals/1d/0e/96/1d0e96bd4b23ca71399c0ded22c9fcd4.png)
+![alt text](https://sites.google.com/site/narutonarutoshippudenmanga/_/rsrc/1338580006294/handsigns/Handsigns.png)
 
 jutsu translation: technique, way
 
@@ -34,7 +34,7 @@ Boot is a build tool for clojure which allows you to run tasks from the command 
 To make sure everything is working run `boot repl` in your command line.
 
 In order to use jutsu you will need to create a build.boot file to add jutsu as a dependency. 
-You can follow the instructions on boot's [homepage](https://github.com/boot-clj/boot) to get started.
+You can follow the instructions on boot's [homepage](https://github.com/boot-clj/boot) to guide you.
 
 ## Usage
 
@@ -86,20 +86,6 @@ Then start using jutsu!
 (jutsu/dataset! [[0 4 2 0] [1 2 3 4]])
 ```
 
-##
-
-## Client Side Web Socket
-Sente receives event via chsk/receive and jutsu uses pattern matching to route the events appropriately.
-Currently using core.match to deal with events:
-:graph/graph
-:graph/update-graph
-:dataset/dataset
-
-Dynamically adding more event routes is a possibility, however the coupling between clj(s) makes testing very difficult.
-
-## Server Side Web Socket
-Server side router currently only sends events to the client-side-router. However, functionality for receiving events is coming.
-
 ## Dev
 
 Run all three commands in separate tabs for optimal dev experience.
@@ -118,6 +104,18 @@ Pull requests are very welcome!
 
 This has the unfortunate side effect of constantly reopening a tab in your browser and can be annoying at times.
 Would love advice on how to test this better. 
+
+## Client Side Web Socket
+Sente receives event via chsk/receive and jutsu uses pattern matching to route the events appropriately.
+Currently using core.match to deal with events:
+:graph/graph
+:graph/update-graph
+:dataset/dataset
+
+Dynamically adding more event routes is a possibility, however the coupling between clj(s) makes testing very difficult.
+
+## Server Side Web Socket
+Server side router currently only sends events to the client-side-router. However, functionality for receiving events is coming.
 
 
 ## More
