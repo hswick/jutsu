@@ -2,9 +2,11 @@
 
 # Jutsu 術
 
-![alt text](http://1.bp.blogspot.com/-on-f-xic6Po/Tser2kXpknI/AAAAAAAAAHE/7tkqDdDwIeM/s1600/Ninjutsu.jpg)
+![alt text](https://s-media-cache-ak0.pinimg.com/originals/1d/0e/96/1d0e96bd4b23ca71399c0ded22c9fcd4.png)
 
 jutsu translation: technique, way
+
+Data visualization tool built with the web and interactivity in mind.
 
 Do you want fast data visualization that looks professional without a lot of hassle? Then you have come to the right place!
 
@@ -16,7 +18,7 @@ Data visualization, exploration, science, and analysis.
 Note this tools functionality is primarily side effects.
 
 The power of jutsu is that it works by sending data to a client just like a website. While any computation is done on the server.
-This is great for a lot of use cases.
+This functionally decouples the visualizations from the computations. Making the user more capable of dealing with a flexible amount of situtations.
 
 Future release will support cloud functionality which will be very few api changes.
 
@@ -42,8 +44,8 @@ Or if working in a source file:
 ```
 
 Then start using jutsu! 
-This will start up a httpkit server and open the jutsu client in your default browser.
 ```clojure
+;;This will start up a httpkit server and open the jutsu client in your default browser.
 (j/start-jutsu!)
 
 ;;If you are running this in a script as opposed to the repl 
@@ -103,6 +105,8 @@ Would love advice on how to test this better.
 
 
 ## More
-[[https://github.com/danielsz/sente-boot][What jutsu started as]]
+[What jutsu started as](https://github.com/danielsz/sente-boot)
+
 [plotly cheat sheet](https://images.plot.ly/plotly-documentation/images/plotly_js_cheat_sheet.pdf)
+
 [plotly full reference](https://plot.ly/javascript/reference/)
