@@ -1,6 +1,6 @@
 ## Currently in a stage of hammock driven development
 
-# Jutsu 術
+# jutsu 術
 
 ![alt text](https://sites.google.com/site/narutonarutoshippudenmanga/_/rsrc/1338580006294/handsigns/Handsigns.png)
 
@@ -22,7 +22,7 @@ Future release will support cloud functionality which will be very few api chang
 
 ## Getting Started
 
-If you are new to clojure then follow these instructions, otherwise skip to usage.
+If you are new to Clojure then follow these instructions, otherwise skip to usage.
 
 Make sure you have java installed
 
@@ -68,7 +68,7 @@ Then start using jutsu!
 ;;delay for a bit to let the websocket connect.
 ;;(Thread/sleep 3000)
 
-;;Adds a graph to the Jutsu client
+;;Adds a graph to the jutsu client
 (j/graph!
   "foo"
   [{:x [1 2 3 4]
@@ -77,13 +77,13 @@ Then start using jutsu!
     :type "scatter"}])
    
 ;;To do realtime updates of a graph
-(jutsu/update-graph!  
+(j/update-graph!  
   "foo"
   {:data {:y [[4]] :x [[5]]} 
    :traces [0]}))
    
 ;;You can even view matrix like datasets
-(jutsu/dataset! [[0 4 2 0] [1 2 3 4]])
+(j/dataset! [[0 4 2 0] [1 2 3 4]])
 ```
 
 ## Dev
@@ -105,17 +105,11 @@ Pull requests are very welcome!
 This has the unfortunate side effect of constantly reopening a tab in your browser and can be annoying at times.
 Would love advice on how to test this better. 
 
-## Client Side Web Socket
+## Web Socket
 Sente receives event via chsk/receive and jutsu uses pattern matching to route the events appropriately.
-Currently using core.match to deal with events:
-:graph/graph
-:graph/update-graph
-:dataset/dataset
 
 Dynamically adding more event routes is a possibility, however the coupling between clj(s) makes testing very difficult.
-
-## Server Side Web Socket
-Server side router currently only sends events to the client-side-router. However, functionality for receiving events is coming.
+Server side router currently only sends events to the client-side-router. However, functionality for receiving events is planned.
 
 
 ## More
