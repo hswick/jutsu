@@ -18,8 +18,11 @@
                   [com.cognitect/transit-cljs "0.8.220"]
                   [hiccups "0.3.0"]
                   [cljsjs/plotly "1.25.0-0"]
-                  [org.clojure/core.match "0.3.0-alpha4"]
-                  [adzerk/bootlaces "0.1.13" :scope "test"]])
+                  [org.clojure/core.match "0.3.0-alpha4"]]
+  :repositories (conj (get-env :repositories)
+                  ["clojars" {:url "https://clojars.org/repo"
+                              :username (System/getenv "CLOJARS_USER")
+                              :password (System/getenv "CLOJARS_PASS")}]))
 
 (require
  '[adzerk.boot-cljs      :refer [cljs]]
@@ -27,11 +30,9 @@
  '[nightlight.boot :refer [nightlight]]
  '[samestep.boot-refresh :refer [refresh]]
  '[adzerk.boot-test :refer :all]
- 'jutsu.web
- '[adzerk.bootlaces :refer :all])
+ 'jutsu.web)
 
 (def +version+ "0.0.1")
-(bootlaces! +version+ :dont-modify-paths? true)
 
 (task-options!
   aot {:namespace '#{jutsu.core}}
@@ -39,7 +40,10 @@
        :file "jutsu.jar"
        :manifest {"Description" "Data visualization tool"}}
   pom {:version +version+
-       :project 'hswick/jutsu})
+       :project 'hswick/jutsu
+       :description "Data visualization tool built for the web"
+       :url "https://github.com/hswick/jutsu"}
+  push {:repo "clojars"})
 
 (try
  (require 'jutsu.core)
@@ -50,7 +54,7 @@
     (cljs :optimizations :advanced)
     (pom)
     (jar)
-    (push :repo "clojars")))
+    (push)))
 
 (deftask testing [] (merge-env! :source-paths #{"test"}) identity)
 
