@@ -94,7 +94,11 @@ Each call to jutsu follows a similar pattern of arguments [id data]
 
 ```clojure
 ;;You can even view matrix like datasets
-(j/dataset! "dataset-foo" [[0 4 2 0] [1 2 3 4]])
+(j/dataset! "dataset-foo" 
+   [[1 2 3 4] 
+    [1 2 3 4] 
+    [1 2 3 4] 
+    [1 2 3 4]])
 ```
 ![alt text](dataset.png)
 
