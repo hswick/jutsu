@@ -21,7 +21,8 @@
   (js/Plotly.newPlot
     (str "graph-" id)
     (clj->js data)
-    (clj->js layout)))
+    (clj->js layout))
+  (.scrollIntoView (.getElementById js/document (str "graph-" id))))
 
 (defn extend-traces!
   [id data]
@@ -31,16 +32,17 @@
     (clj->js (:traces data))))
 
 (defn draw-dataset!
-  [data]
-  (.log js/console data)
+  [id data]
   (append-to-body! (html [:div.container
                           {:style "overflow: scroll; height: 25%;"}
-                          [:h1 "data"]                          
-                          [:table.table-striped
-                           {:style "width: 100%;"}
-                           (for [data-row data]
-                             [:tr
-                              (map (fn [item] [:td (str item)]) data-row)])]])))
+                          [:h1 (str id)]
+                          [(keyword (str "div#dataset-" id))
+                           [:table.table-striped
+                            {:style "width: 100%;"}
+                            (for [data-row data]
+                              [:tr
+                               (map (fn [item] [:td (str item)]) data-row)])]]]))
+  (.scrollIntoView (.getElementById js/document (str "dataset-" id))))
                                   
 (defn jutsu-client-event-handler [?data]
   (match (first ?data)
@@ -54,7 +56,9 @@
       (:id (second ?data))
       (:data (second ?data)))
     :dataset/dataset
-    (draw-dataset! (:data (second ?data)))
+    (draw-dataset!
+      (:id (second ?data))
+      (:data (second ?data)))
     :else
     (.log js/console (str "Unhandled event " ?data))))
 

@@ -24,10 +24,11 @@
      :traces [0]}))
 
 (defn test-dataset! []
-  (j/dataset! [[1 2 3 4]
-               [1 2 3 4]
-               [1 2 3 4]
-               [1 2 3 4]]))
+  (j/dataset! @j/graph-count
+    [[1 2 3 4]
+     [1 2 3 4]
+     [1 2 3 4]
+     [1 2 3 4]]))
 
 (j/start-jutsu!)
 (Thread/sleep 3000)

@@ -31,6 +31,6 @@
                          {:id id
                           :data data}])))
 
-(defn dataset! [data]
+(defn dataset! [id data]
   (doseq [uid (:any @web/connected-uids)]
-    (web/chsk-send! uid [:dataset/dataset {:data data}])))
+    (web/chsk-send! uid [:dataset/dataset {:id id :data data}])))

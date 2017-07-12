@@ -44,6 +44,8 @@ Add jutsu to your dependencies
 [hswick/jutsu "0.0.1"]
 ```
 
+*note* If you are using nightlight you must place nightlight after jutsu in the list of dependencies. This is currently a known bug.
+
 Then include jutsu into your current namespace.
 
 If working in a repl:
@@ -63,11 +65,14 @@ Then start using jutsu!
 ```clojure
 ;;This will start up a httpkit server and open the jutsu client in your default browser.
 (j/start-jutsu!)
-
 ;;If you are running this in a script as opposed to the repl 
 ;;delay for a bit to let the websocket connect.
 ;;(Thread/sleep 3000)
 
+```
+
+Each call to jutsu follows a similar pattern of arguments [id data]
+```clojure
 ;;Adds a graph to the jutsu client
 (j/graph!
   "foo"
@@ -75,16 +80,23 @@ Then start using jutsu!
     :y [1 2 3 4]
     :mode "markers"
     :type "scatter"}])
-   
+```
+![alt text](graph1.png)
+
+```clojure  
 ;;To do realtime updates of a graph
 (j/update-graph!  
   "foo"
   {:data {:y [[4]] :x [[5]]} 
    :traces [0]}))
    
-;;You can even view matrix like datasets
-(j/dataset! [[0 4 2 0] [1 2 3 4]])
 ```
+
+```clojure
+;;You can even view matrix like datasets
+(j/dataset! "dataset-foo" [[0 4 2 0] [1 2 3 4]])
+```
+![alt text](dataset.png)
 
 ## Dev
 
@@ -119,7 +131,7 @@ Server side router currently only sends events to the client-side-router. Howeve
 
 [plotly full reference](https://plot.ly/javascript/reference/)
 
-## LICENSE
+## MIT LICENSE
 Copyright 2017 Harley Swick
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
