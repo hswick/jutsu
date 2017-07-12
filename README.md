@@ -41,7 +41,7 @@ You can follow the instructions on boot's [homepage](https://github.com/boot-clj
 Add jutsu to your dependencies
 
 ```clojure
-[hswick/jutsu "0.0.1"]
+[hswick/jutsu "0.0.2"]
 ```
 
 *note* If you are using nightlight you must place nightlight after jutsu in the list of dependencies. This is currently a known bug.
