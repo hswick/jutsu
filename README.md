@@ -71,7 +71,7 @@ Then start using jutsu!
 
 ```
 
-Each call to jutsu follows a similar pattern of arguments [id data]
+Each call to jutsu follows a similar function signature [id data]
 ```clojure
 ;;Adds a graph to the jutsu client
 (j/graph!
