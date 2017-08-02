@@ -6,7 +6,7 @@
 ;;opens client in browser
 (defn start-jutsu! 
   ([] (web/start!))
-  ([color] (web/start! color)))
+  ([port display] (web/start! port display)))
 
 (def graph-count (atom 0))
 
