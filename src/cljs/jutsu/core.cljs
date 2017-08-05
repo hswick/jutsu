@@ -43,21 +43,24 @@
                               [:tr
                                (map (fn [item] [:td (str item)]) data-row)])]]]))
   (.scrollIntoView (.getElementById js/document (str "dataset-" id))))
+
+(defn sanitize-id [id]
+  (clojure.string/replace id #" " #"-"))
                                   
 (defn jutsu-client-event-handler [?data]
   (match (first ?data)
     :graph/graph
     (draw-plot! 
-      (:id (second ?data))
+      (sanitize-id (:id (second ?data)))
       (:data (second ?data))
       (:layout (second ?data)))
     :graph/update
     (extend-traces! 
-      (:id (second ?data))
+      (sanitize-id (:id (second ?data)))
       (:data (second ?data)))
     :dataset/dataset
     (draw-dataset!
-      (:id (second ?data))
+      (sanitize-id (:id (second ?data)))
       (:data (second ?data)))
     :else
     (.log js/console (str "Unhandled event " ?data))))

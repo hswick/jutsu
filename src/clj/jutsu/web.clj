@@ -135,8 +135,8 @@
   ([port display]
    (init-server-event-handler! (fn [?data]))
    (start-router!)
-   (-> (index-route-factory color)
+   (-> (index-route-factory "white");;deal with color later
        jutsu-routes
        jutsu-ring-handler
        (start-web-server! port)
-       (display-uri! display)))
+       (display-uri! display))))
