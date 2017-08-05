@@ -45,7 +45,7 @@
   (.scrollIntoView (.getElementById js/document (str "dataset-" id))))
 
 (defn sanitize-id [id]
-  (clojure.string/replace id #" " #"-"))
+  (clojure.string/replace id #" " "-"))
                                   
 (defn jutsu-client-event-handler [?data]
   (match (first ?data)
