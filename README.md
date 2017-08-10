@@ -41,7 +41,7 @@ You can follow the instructions on boot's [homepage](https://github.com/boot-clj
 Add jutsu to your dependencies
 
 ```clojure
-[hswick/jutsu "0.0.2"]
+[hswick/jutsu "0.0.4"]
 ```
 
 *note* If you are using nightlight you must place nightlight after jutsu in the list of dependencies. This is currently a known bug.
@@ -101,6 +101,30 @@ Each call to jutsu follows a similar function signature [id data]
     [1 2 3 4]])
 ```
 ![alt text](dataset.png)
+
+## Remote
+
+The nice thing about jutsu being run like a web app is that it works on remote environments by default.
+
+SSH into your remote machine like so:
+
+ssh -L 9002:localhost:4002 USER@IP_ADDRESS
+
+Then in your code (I personally like to use jutsu in the repl) initialize jutsu:
+
+```clojure
+(j/start-jutsu! 4002 false)
+```
+
+4002 is the port number that jutsu will be serving locally on your remote machine
+The third argument we set to false because we don't want it to try to open up the graph
+in a web browser automatically.
+
+In your browser on your computer type localhost:9000 as the url.
+
+You should see the jutsu start page if it is all working.
+
+Then when you are ready you can send graphs to this web page and see them immediately. 
 
 ## Dev
 
