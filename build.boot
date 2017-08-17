@@ -32,7 +32,7 @@
  '[adzerk.boot-test :refer :all]
  'jutsu.web)
 
-(def +version+ "0.0.4")
+(def +version+ "0.0.5")
 
 (task-options!
   aot {:namespace '#{jutsu.core}}

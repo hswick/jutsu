@@ -6,19 +6,23 @@
 
 jutsu translation: technique, way
 
-Do you want fast data visualization that looks professional without a lot of hassle? Then you have come to the right place!
+Do you want fast data visualization that looks professional without a lot of hassle?
 
-This tool is meant for purposes of all things data viz! The current api is functionally a light wrapper around [plotly.js](https://plot.ly/javascript/).
-So you can follow their conventions for plotting while getting to use EDN instead of JSON. 
+Tired of having to come up with your own ad hoc solution to visualize data remotely?
 
-Data visualization, exploration, science, and analysis.
+Then this tool is meant for you!
 
-Note this tools functionality is primarily side effects.
+The current api is functionally a light wrapper around [plotly.js](https://plot.ly/javascript/).
+This way you can follow their conventions for plotting while getting to use EDN instead of JSON. 
 
-The power of jutsu is that it works by sending data to a client just like a website. While any computation is done on the server.
-This functionally decouples the visualizations from the computations. Making the user more capable of dealing with a flexible amount of situtations.
+The power of jutsu is that it works by sending data to a client just like a website. This has a couple of advantages.
 
-Future release will support cloud functionality which will be very few api changes.
+The first is that jutsu works remotely by default, same api for cloud and localhost.
+
+The second is that plotly graphs use javascript for animations and interactivity. This is increasingly becoming the norm for professional data visualization.
+
+Tradeoff:
+Every call in this api is a side effect. This is denoted in the naming conventions for the api.
 
 ## Getting Started
 
@@ -41,7 +45,7 @@ You can follow the instructions on boot's [homepage](https://github.com/boot-clj
 Add jutsu to your dependencies
 
 ```clojure
-[hswick/jutsu "0.0.4"]
+[hswick/jutsu "0.0.5"]
 ```
 
 *note* If you are using nightlight you must place nightlight after jutsu in the list of dependencies. This is currently a known bug.
