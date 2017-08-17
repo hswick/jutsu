@@ -1,5 +1,3 @@
-## Currently in a stage of hammock driven development
-
 # jutsu 術
 
 ![alt text](https://sites.google.com/site/narutonarutoshippudenmanga/_/rsrc/1338580006294/handsigns/Handsigns.png)
