@@ -17,7 +17,7 @@
                   [com.cognitect/transit-clj  "0.8.275"];;; Transit deps optional; may be used to aid perf. of larger data payloads
                   [com.cognitect/transit-cljs "0.8.220"]
                   [hiccups "0.3.0"]
-                  [cljsjs/plotly "1.25.0-0"]
+                  [cljsjs/plotly "1.30.0-0"]
                   [org.clojure/core.match "0.3.0-alpha4"]]
   :repositories (conj (get-env :repositories)
                   ["clojars" {:url "https://clojars.org/repo"
@@ -83,10 +83,10 @@
   (repl 
     :client true)))
 
-(deftask test-jutsu
+(deftask test-code
   []
   (comp
     (testing)
-    (watch)
+    (wait)
     (cljs)
     (test)))

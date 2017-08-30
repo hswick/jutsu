@@ -104,6 +104,43 @@ Each call to jutsu follows a similar function signature [id data]
 ```
 ![alt text](dataset.png)
 
+```clojure
+(j/graph! "Line Chart"
+  [{:x [1 2 3 5]
+    :y [6 7 8 9]
+    :type "scatter"}])
+```
+![alt text](img/linechart.png)
+
+```clojure
+
+  (j/graph! "Bar Chart"
+    [{:x ["foo" "bar" "foobar"]
+      :y [20 30 40]
+      :type "bar"}])
+```
+![alt text](img/barchart.png)
+
+```clojure
+  (j/graph! "Pie Chart"
+    [{:values [19 26 55]
+      :labels ["Residential" "Non Residential" "Utility"]
+      :type "pie"}])
+```
+![alt text](img/piechart.png)
+
+```clojure
+  (j/graph! "3D Scatter"
+    [{:x (take 100 (repeatedly #(rand)))
+      :y (take 100 (repeatedly #(rand)))
+      :z (take 100 (repeatedly #(rand)))
+      :type "scatter3d"
+      :mode "markers"}]
+    {:width 600
+     :height 600})
+```
+![alt text](img/3dscatterchart.png)
+
 ## Remote
 
 The nice thing about jutsu being run like a web app is that it works on remote environments by default.
@@ -142,7 +179,7 @@ Pull requests are very welcome!
 
 ## Testing
 
-`boot test-jutsu` to run tests (will reload on resource file changes)
+`boot test-code` to run tests (will reload on resource file changes)
 
 This has the unfortunate side effect of constantly reopening a tab in your browser and can be annoying at times.
 Would love advice on how to test this better. 

@@ -30,6 +30,34 @@
      [1 2 3 4]
      [1 2 3 4]]))
 
+(defn test-line-graph []
+  (j/graph! "Line Chart Test"
+    [{:x [1 2 3 5]
+      :y [6 7 8 9]
+      :type "scatter"}]))
+
+(defn test-bar-chart []
+  (j/graph! "Bar Chart Test"
+    [{:x ["foo" "bar" "foobar"]
+      :y [20 30 40]
+      :type "bar"}]))
+
+(defn test-pie-chart []
+  (j/graph! "Pie Chart Test"
+    [{:values [19 26 55]
+      :labels ["Residential" "Non Residential" "Utility"]
+      :type "pie"}]))
+
+(defn test-3D-graph []
+  (j/graph! "3D WebGL Test"
+    [{:x (take 100 (repeatedly #(rand)))
+      :y (take 100 (repeatedly #(rand)))
+      :z (take 100 (repeatedly #(rand)))
+      :type "scatter3d"
+      :mode "markers"}]
+    {:width 600
+     :height 600}))
+
 (j/start-jutsu!)
 (Thread/sleep 3000)
 (w/test-fast-server>user-pushes)
@@ -39,6 +67,10 @@
   (test-graph-2! "foo")
   (test-update-graph!)
   (test-dataset!)
+  (test-line-graph)
+  (test-bar-chart)
+  (test-pie-chart)
+  (test-3D-graph)
   (w/test-fast-server>user-pushes))
 
 (run-tests)
