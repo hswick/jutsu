@@ -144,6 +144,8 @@ Each call to jutsu follows a similar function signature [id data]
 ```
 ![alt text](img/threedscatter.png)
 
+Please check out plotly's homepage for a [full set of documented options.](https://plot.ly/javascript/)
+
 ## Remote
 
 The nice thing about jutsu being run like a web app is that it works on remote environments by default.
