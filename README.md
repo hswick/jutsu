@@ -83,7 +83,7 @@ Each call to jutsu follows a similar function signature [id data]
     :mode "markers"
     :type "scatter"}])
 ```
-![alt text](img/graph1.png)
+![alt text](img/graph.png)
 
 ```clojure  
 ;;To do realtime updates of a graph
