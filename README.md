@@ -83,7 +83,7 @@ Each call to jutsu follows a similar function signature [id data]
     :mode "markers"
     :type "scatter"}])
 ```
-![alt text](graph1.png)
+![alt text](img/graph1.png)
 
 ```clojure  
 ;;To do realtime updates of a graph
@@ -93,6 +93,7 @@ Each call to jutsu follows a similar function signature [id data]
    :traces [0]}))
    
 ```
+![alt text](img/updateplot.png)
 
 ```clojure
 ;;You can even view matrix like datasets
@@ -102,7 +103,7 @@ Each call to jutsu follows a similar function signature [id data]
     [1 2 3 4] 
     [1 2 3 4]])
 ```
-![alt text](dataset.png)
+![alt text](img/dataset.png)
 
 ```clojure
 (j/graph! "Line Chart"
@@ -139,7 +140,7 @@ Each call to jutsu follows a similar function signature [id data]
     {:width 600
      :height 600})
 ```
-![alt text](img/3dscatterchart.png)
+![alt text](img/threedscatter.png)
 
 ## Remote
 
