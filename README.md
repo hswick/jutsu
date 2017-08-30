@@ -8,7 +8,9 @@ Do you want fast data visualization that looks professional without a lot of has
 
 Tired of having to come up with your own ad hoc solution to visualize data remotely?
 
-Then this tool is meant for you!
+Then this tool is meant for you! 
+
+(I promise the graphs look a lot better than on this README. Image quality is being reduced for compression reasons I believe.)
 
 The current api is functionally a light wrapper around [plotly.js](https://plot.ly/javascript/).
 This way you can follow their conventions for plotting while getting to use EDN instead of JSON. 
