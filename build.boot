@@ -7,7 +7,7 @@
                   [nightlight "1.6.5" :scope "test"]
                   [samestep/boot-refresh "0.1.0" :scope "test"]
                   [adzerk/boot-test "1.2.0" :scope "test"] 
-                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
+                  [org.clojure/core.async "0.3.443"]
                   [com.taoensso/sente        "1.5.0-RC2"] ; <--- Sente
                   [http-kit                  "2.1.19"]
                   [ring                      "1.4.0-RC1"]
@@ -32,7 +32,7 @@
  '[adzerk.boot-test :refer :all]
  'jutsu.web)
 
-(def +version+ "0.1.0")
+(def +version+ "0.1.1")
 
 (task-options!
   aot {:namespace '#{jutsu.core}}
