@@ -26,11 +26,13 @@
   data is the edn data you want to be plotted. This data must follow plotly.js format.
   [id data layout] optional layout argument for global plotly config options."
   ([id data] (graph! id data {}))
-  ([id data layout]
+  ([id data layout] (graph! id data layout {}))
+  ([id data layout options]
    (doseq [uid (:any @web/connected-uids)]
     (web/chsk-send! uid [:graph/graph 
                          {:data data
                           :layout layout
+                          :options options
                           :id id}]))
    (swap! graph-count inc)))
 

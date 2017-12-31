@@ -12,7 +12,7 @@
   (.insertAdjacentHTML (.-body js/document) "beforeEnd" el))
 
 (defn draw-plot!
-  [id data layout]
+  [id data layout options]
   (when (not (.getElementById js/document (str "graph-" id)))
     (append-to-body! (html [:div.container                         
                             [:style (str ".container {text-align: left;}")]
@@ -21,7 +21,8 @@
   (js/Plotly.newPlot
     (str "graph-" id)
     (clj->js data)
-    (clj->js layout))
+    (clj->js layout)
+    (clj->js options))
   (.scrollIntoView (.getElementById js/document (str "graph-" id))))
 
 (defn extend-traces!
@@ -53,7 +54,8 @@
     (draw-plot! 
       (sanitize-id (:id (second ?data)))
       (:data (second ?data))
-      (:layout (second ?data)))
+      (:layout (second ?data))
+      (:options (second ?data)))
     :graph/update
     (extend-traces! 
       (sanitize-id (:id (second ?data)))
