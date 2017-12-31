@@ -38,19 +38,19 @@
 
 (defn index-page
   ([] (index-page "#ebd5f2"))
-  ([background-color]
+  ([background-color header]
    (hiccup/html
     (include-css "//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css")    
-    [:h1.jutsu-header "jutsu 術"
+    [:h1.jutsu-header (if header "jutsu 術" nil)
      [:style (str "body {text-align: center; background-color:" background-color ";}")]]
     [:script {:src "main.js"}])))
 
-(defn index-page-handler-factory [color]
-  (fn [req] (index-page color)))
+(defn index-page-handler-factory [color header]
+  (fn [req] (index-page color header)))
 
 (defn index-route-factory
-  ([color]
-   (GET "/" req ((index-page-handler-factory color) req))))
+  ([color header]
+   (GET "/" req ((index-page-handler-factory color header) req))))
 
 ;;Order matters in how you compose routes
 (defn jutsu-routes
@@ -132,10 +132,11 @@
 
 (defn start!
   ([] (start! nil true))
-  ([port display]
+  ([port display] (start! port display false))
+  ([port display header]
    (init-server-event-handler! (fn [?data]))
    (start-router!)
-   (-> (index-route-factory "white");;deal with color later
+   (-> (index-route-factory "white" header);;deal with color later
        jutsu-routes
        jutsu-ring-handler
        (start-web-server! port)

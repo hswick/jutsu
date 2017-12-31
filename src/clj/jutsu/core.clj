@@ -13,7 +13,8 @@
   to open up jutsu in browser or not.
   "
   ([] (web/start!))
-  ([port display] (web/start! port display)))
+  ([port display] (web/start! port display))
+  ([port display header] (web/start! port display header)))
 
 (def graph-count (atom 0))
 
