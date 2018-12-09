@@ -1,15 +1,15 @@
 (set-env!
   :resource-paths #{"src/clj" "src/cljs"}
-  :dependencies '[[org.clojure/clojure "1.8.0"]
+  :dependencies '[[org.clojure/clojure "1.9.0"]
                   [org.clojure/clojurescript "1.9.518" :scope "test"]
                   [adzerk/boot-cljs      "2.0.0" :scope "test"]
                   [adzerk/boot-reload    "0.5.1"      :scope "test"]
-                  [nightlight "1.6.5" :scope "test"]
+                  [nightlight "RELEASE" :scope "test"]
                   [samestep/boot-refresh "0.1.0" :scope "test"]
                   [adzerk/boot-test "1.2.0" :scope "test"] 
                   [org.clojure/core.async "0.3.443"]
                   [com.taoensso/sente        "1.5.0-RC2"] ; <--- Sente
-                  [http-kit                  "2.1.19"]
+                  [http-kit                  "2.3.0"]
                   [ring                      "1.4.0-RC1"]
                   [ring/ring-defaults        "0.1.5"] ; Includes `ring-anti-forgery`, etc.
                   [compojure                 "1.3.4"] ; Or routing lib of your choice
