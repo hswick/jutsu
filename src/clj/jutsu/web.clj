@@ -117,7 +117,7 @@
      uri)))
 
 (defn display-uri! [uri display]
-  (when
+  (when display
     (try
       (.browse (java.awt.Desktop/getDesktop) (java.net.URI. uri))
       (catch java.awt.HeadlessException _)))
