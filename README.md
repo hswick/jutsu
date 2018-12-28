@@ -1,3 +1,9 @@
+# DEPRECATED
+
+This project is no longer being maintained, as its dependencies have drifted it seems the clojurescript parts don't work the same way as they used to. Running the tests everything works fine, but when using it normally the plots don't seem to work.
+
+This is the main issue, so if you happen to come across this and fix it, knock yourself out, I'll be more than happy to merge the PR. However, at this point I am no longer going to continue working on this. Best of luck fellow clojurians!
+
 # jutsu 術
 
 ![alt text](https://sites.google.com/site/narutonarutoshippudenmanga/_/rsrc/1338580006294/handsigns/Handsigns.png)
